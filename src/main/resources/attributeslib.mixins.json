@@ -1,0 +1,25 @@
+{
+  "required": true,
+  "package": "dev.shadowsoffire.attributeslib.mixin",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+    "AbilitiesMixin",
+    "AttributeInstanceAccessor",
+    "AttributeMapMixin",
+    "AttributeMixin",
+    "CombatRulesMixin",
+    "ItemStackMixin",
+    "LivingEntityMixin",
+    "NearestAttackableTargetGoalMixin",
+    "PotionUtilsMixin"
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  },
+  "client": [
+    "EffectRenderingInventoryScreenMixin",
+    "client.AbstractContainerScreenMixin",
+    "client.ClientPacketListenerMixin",
+    "client.ScreenMixin"
+  ]
+}
