@@ -17,6 +17,7 @@ import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Pair;
 
 import dev.shadowsoffire.attributeslib.AttributesLib;
+import dev.shadowsoffire.attributeslib.api.ALObjects;
 import dev.shadowsoffire.attributeslib.api.AttributeHelper;
 import dev.shadowsoffire.attributeslib.api.IFormattableAttribute;
 import dev.shadowsoffire.attributeslib.api.client.AddAttributeTooltipsEvent;
@@ -25,11 +26,13 @@ import dev.shadowsoffire.attributeslib.api.client.GatherSkippedAttributeTooltips
 import dev.shadowsoffire.attributeslib.api.client.ItemTooltipCallbackWithPlayer;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
+import net.minecraft.client.particle.CritParticle;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.network.chat.CommonComponents;
@@ -54,17 +57,14 @@ import org.jetbrains.annotations.Nullable;
 
 public class AttributesLibClient implements ClientModInitializer {
 
-    //public static void particleFactories(RegisterParticleProvidersEvent e) {
-    //    e.registerSprite(ALObjects.Particles.APOTH_CRIT.get(), ApothCritParticle::new);
-    //}
-
     @Override
     public void onInitializeClient() {
         tooltips();
-    //    addAttribComponent();
+        //    addAttribComponent();
         effectGuiTooltips();
 
         potionTooltips();
+        ParticleFactoryRegistry.getInstance().register(ALObjects.Particles.APOTH_CRIT, CritParticle.Provider::new);
     }
 
     public void tooltips() {
@@ -96,7 +96,7 @@ public class AttributesLibClient implements ClientModInitializer {
 
     }
 
-    public void addAttribComponent() {
+    public void addAttribComponent() { //Was redone with mixins, can delete?
         ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
             if (screen instanceof InventoryScreen scn) {
                 var atrComp = new AttributesGui(scn);
@@ -196,7 +196,7 @@ public class AttributesLibClient implements ClientModInitializer {
     public static void apothCrit(int entityId) {
         Entity entity = Minecraft.getInstance().level.getEntity(entityId);
         if (entity != null) {
-    //  TODO crit particle :( Minecraft.getInstance().particleEngine.createTrackingEmitter(entity, ALObjects.Particles.APOTH_CRIT.get());
+            Minecraft.getInstance().particleEngine.createTrackingEmitter(entity, ALObjects.Particles.APOTH_CRIT);
         }
     }
 

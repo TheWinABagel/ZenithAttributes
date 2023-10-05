@@ -1,9 +1,6 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.shadowsoffire.attributeslib.api.*;
-import dev.shadowsoffire.attributeslib.util.IEntityOwned;
-import io.github.fabricators_of_create.porting_lib.attributes.PortingLibAttributes;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.item.ItemStack;
@@ -11,10 +8,7 @@ import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Final;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
+import org.spongepowered.asm.mixin.injection.*;
 
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -40,16 +34,6 @@ public abstract class LivingEntityMixin extends Entity {
     public LivingEntityMixin(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
     }
-
-    /**
-     * Constructor mixin to call {@link IEntityOwned#setOwner(LivingEntity)} on {@link #attributes}.<br>
-     * Supports {@link AttributeChangedValueEvent}.
-     */
-    @Inject(at = @At(value = "TAIL"), method = "<init>(Lnet/minecraft/world/entity/EntityType;Lnet/minecraft/world/level/Level;)V", require = 1, remap = false)
-    public void apoth_ownedAttrMap(EntityType<?> type, Level level, CallbackInfo ci) {
-        ((IEntityOwned) attributes).setOwner((LivingEntity) (Object) this);
-    }
-
 
     /**
      * @author Shadows
@@ -102,9 +86,10 @@ public abstract class LivingEntityMixin extends Entity {
         return ALCombatRules.getDamageAfterProtection((LivingEntity) (Object) this, src, amount, protPoints);
     }
 
-    @ModifyVariable(method = "heal", at = @At(value = "HEAD", args = "healAmount"), argsOnly = true)
+    @ModifyVariable(method = "heal", at = @At(value = "HEAD"))
     private float healEvent(float value){
         float amount = HealEvent.EVENT.invoker().onLivingHeal(this, value);
+        //AttributesLib.LOGGER.info("Heal event initialized, old heal {}, new heal {}", value, amount);
         return amount >= 0 ? amount : 0;
     }
 
@@ -114,11 +99,10 @@ public abstract class LivingEntityMixin extends Entity {
             this.useItemRemaining = UseItemTickEvent.EVENT.invoker().onLivingUse((LivingEntity) (Object) this, usingItem, this.useItemRemaining);
     }
 
-    @ModifyReturnValue(method = "createLivingAttributes", at = @At("RETURN"), require = 1, allow = 1)
-    private static AttributeSupplier.Builder attributes(AttributeSupplier.Builder value){
-        value.add(ALObjects.Attributes.DRAW_SPEED)
+    @Inject(method = "createLivingAttributes", at = @At("RETURN"), require = 1, allow = 1)
+    private static void attributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir){
+        cir.getReturnValue().add(ALObjects.Attributes.DRAW_SPEED)
         .add(ALObjects.Attributes.CRIT_CHANCE)
-        .add(ALObjects.Attributes.CRIT_DAMAGE)
         .add(ALObjects.Attributes.COLD_DAMAGE)
         .add(ALObjects.Attributes.FIRE_DAMAGE)
         .add(ALObjects.Attributes.LIFE_STEAL)
@@ -126,9 +110,8 @@ public abstract class LivingEntityMixin extends Entity {
         .add(ALObjects.Attributes.OVERHEAL)
         .add(ALObjects.Attributes.GHOST_HEALTH)
         .add(ALObjects.Attributes.MINING_SPEED)
-        .add(ALObjects.Attributes.ARROW_DAMAGE)
+        //.add(ALObjects.Attributes.ARROW_DAMAGE)
         .add(ALObjects.Attributes.ARROW_VELOCITY)
-        .add(ALObjects.Attributes.EXPERIENCE_GAINED)
         .add(ALObjects.Attributes.HEALING_RECEIVED)
         .add(ALObjects.Attributes.ARMOR_PIERCE)
         .add(ALObjects.Attributes.ARMOR_SHRED)
@@ -137,8 +120,6 @@ public abstract class LivingEntityMixin extends Entity {
         .add(ALObjects.Attributes.DODGE_CHANCE)
         .add(ALObjects.Attributes.ELYTRA_FLIGHT)
         .add(ALObjects.Attributes.CREATIVE_FLIGHT);
-
-        return (value);
     }
 
 }

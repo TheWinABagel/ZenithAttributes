@@ -23,13 +23,20 @@ repositories {
 		name = "CCA + PAL"
 		url = 'https://maven.ladysnake.org/releases'
 	}
-	maven { url "https://jitpack.io/" }
 	maven {
 		url "https://maven.jamieswhiteshirt.com/libs-release"
 		content {
 			includeGroup "com.jamieswhiteshirt"
 		}
 	}
+	maven {
+		name = "Modrinth"
+		url = "https://api.modrinth.com/maven"
+		content {
+			includeGroup "maven.modrinth"
+		}
+	}
+	maven { url "https://jitpack.io/" }
 	maven { url 'https://maven.blamejared.com' }
 	maven { url "https://maven.shedaniel.me" }
 	maven { url "https://maven.terraformersmc.com" }
@@ -60,6 +67,12 @@ dependencies {
 
 	// Reach entity attributes
 	modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}"))
+
+	// Projectile Damage Attribute
+	modImplementation(include("maven.modrinth:projectile-damage-attribute:${project.projectile_damage}-fabric"))
+
+	// Additional Entity Attributes
+	modImplementation(include("maven.modrinth:AdditionalEntityAttributes:${project.additional_attributes}"))
 
 	// Fakerlib
 	modImplementation( "dev.shadowsoffire.placebo:placebo-fabric-1.20.1:${project.fakerlib_version}")

@@ -3,6 +3,7 @@ package dev.shadowsoffire.attributeslib.api;
 import java.util.UUID;
 import java.util.function.Consumer;
 
+import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import io.github.fabricators_of_create.porting_lib.attributes.PortingLibAttributes;
 import org.jetbrains.annotations.Nullable;
 
@@ -119,7 +120,8 @@ public interface IFormattableAttribute {
     default UUID getBaseUUID() {
         if (this == Attributes.ATTACK_DAMAGE) return AttributeHelper.BASE_ATTACK_DAMAGE;
         else if (this == Attributes.ATTACK_SPEED) return AttributeHelper.BASE_ATTACK_SPEED;
-        else if (this == PortingLibAttributes.REACH_DISTANCE) return AttributeHelper.BASE_ENTITY_REACH;
+        else if (this == PortingLibAttributes.ENTITY_REACH) return AttributeHelper.BASE_ENTITY_REACH;
+        else if (this == ReachEntityAttributes.ATTACK_RANGE) return AttributeHelper.BASE_ENTITY_REACH;
         return null;
     }
 

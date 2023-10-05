@@ -1,21 +1,8 @@
 package dev.shadowsoffire.attributeslib.compat;
 
-import java.util.Map;
-import java.util.UUID;
-import java.util.function.BiConsumer;
-
-import com.google.common.collect.Multimap;
-
-import dev.shadowsoffire.attributeslib.client.ModifierSource;
-import dev.shadowsoffire.attributeslib.client.ModifierSource.ItemModifierSource;
-import dev.shadowsoffire.attributeslib.client.ModifierSourceType;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
-import net.minecraft.world.item.ItemStack;
 
-public class CuriosCompat {
+public class TrinketsCompat {
 
     static {
         if (!FabricLoader.getInstance().isModLoaded("trinkets")) {
@@ -23,7 +10,7 @@ public class CuriosCompat {
         }
     }
 
-    public static void init() {
+    public static void init() { //TODO add
   /*      ModifierSourceType.register(new ModifierSourceType<>(){
 
             @Override

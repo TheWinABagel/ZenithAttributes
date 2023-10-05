@@ -3,10 +3,8 @@ package dev.shadowsoffire.attributeslib.mixin;
 import java.util.List;
 
 import com.google.common.collect.Multimap;
-import com.llamalad7.mixinextras.injector.ModifyReturnValue;
 import dev.shadowsoffire.attributeslib.api.ItemAttributeModifierEvent;
 import dev.shadowsoffire.attributeslib.api.client.ItemTooltipCallbackWithPlayer;
-import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -42,10 +40,10 @@ public class ItemStackMixin {
         ItemTooltipCallbackWithPlayer.EVENT.invoker().getTooltip((ItemStack) (Object) this, tooltipContext, info.getReturnValue(), entity);
     }
 
-    @ModifyReturnValue(method = "getAttributeModifiers", at = @At("TAIL"))
-    private Multimap<Attribute, AttributeModifier> attributeModifierEvent(Multimap<Attribute, AttributeModifier> multimap , EquipmentSlot slot) {
-        ItemAttributeModifierEvent.AttributeModifierEvent event = new ItemAttributeModifierEvent.AttributeModifierEvent(((ItemStack) (Object) this), slot, multimap);
+    @Inject(method = "getAttributeModifiers", at = @At("RETURN"), cancellable = true)
+    private void attributeModifierEvent(EquipmentSlot slot, CallbackInfoReturnable<Multimap<Attribute, AttributeModifier>> cir) {
+        ItemAttributeModifierEvent.AttributeModifierEvent event = new ItemAttributeModifierEvent.AttributeModifierEvent(((ItemStack) (Object) this), slot, cir.getReturnValue());
         ItemAttributeModifierEvent.GATHER_TOOLTIPS.invoker().gatherTooltips(event);
-        return event.getModifiers();
+        cir.setReturnValue(event.nonChangableModifiers);
     }
 }

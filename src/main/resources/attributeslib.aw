@@ -13,3 +13,4 @@ accessible class net/minecraft/world/level/block/entity/BlockEntityType$BlockEnt
 accessible method net/minecraft/network/chat/TextColor <init> (ILjava/lang/String;)V
 accessible field net/minecraft/network/chat/TextColor NAMED_COLORS Ljava/util/Map;
 accessible field net/minecraft/world/entity/projectile/AbstractArrow piercingIgnoreEntityIds Lit/unimi/dsi/fastutil/ints/IntOpenHashSet;
+mutable field net/minecraft/network/chat/TextColor NAMED_COLORS Ljava/util/Map;

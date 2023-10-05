@@ -1,13 +1,17 @@
 package dev.shadowsoffire.attributeslib.api;
 
-import static dev.shadowsoffire.attributeslib.AttributesLib.R;
-
 import dev.shadowsoffire.attributeslib.impl.BooleanAttribute;
 import dev.shadowsoffire.attributeslib.mobfx.*;
 import io.github.fabricators_of_create.porting_lib.core.PortingLib;
 import io.github.fabricators_of_create.porting_lib.util.RegistryObject;
+import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.particle.v1.FabricParticleTypes;
+import net.minecraft.client.particle.CritParticle;
+import net.minecraft.client.particle.EnchantmentTableParticle;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
+import net.minecraft.resources.ResourceLocation;
+import net.minecraft.sounds.SoundEvents;
 import org.jetbrains.annotations.ApiStatus;
 
 import dev.shadowsoffire.attributeslib.AttributesLib;
@@ -37,12 +41,13 @@ public class ALObjects {
         /**
          * Arrow Damage. Base value = (1.0) = 100% default arrow damage
          */
-        public static final Attribute ARROW_DAMAGE = new RangedAttribute("attributeslib:arrow_damage", 1.0D, 0.0D, 10.0D).setSyncable(true);
+        // Use EntityAttributes_ProjectileDamage.GENERIC_PROJECTILE_DAMAGE instead projectile_damage:generic
+        //public static final Attribute ARROW_DAMAGE = new RangedAttribute("attributeslib:arrow_damage", 1.0D, 0.0D, 10.0D).setSyncable(true);
 
         /**
          * Arrow Velocity. Base value = (1.0) = 100% default arrow velocity
          * <p>
-         * Arrow damage scales with the velocity as well as {@link #ARROW_DAMAGE} and the base damage of the arrow entity.
+         * Arrow damage scales with the velocity as well as {link #ARROW_DAMAGE} and the base damage of the arrow entity.
          */
         public static final Attribute ARROW_VELOCITY = new RangedAttribute("attributeslib:arrow_velocity", 1.0D, 0.0D, 10.0D).setSyncable(true);
 
@@ -61,7 +66,8 @@ public class ALObjects {
          * Amount of damage caused by critical strikes. Base value = (1.5) = 150% normal damage dealt.<br>
          * Also impacts vanilla (jump) critical strikes.
          */
-        public static final Attribute CRIT_DAMAGE = new RangedAttribute("attributeslib:crit_damage", 1.5D, 1.0D, 100.0D).setSyncable(true);
+        // Use AdditionalEntityAttributes.CRITICAL_BONUS_DAMAGE instead
+        //public static final Attribute CRIT_DAMAGE = new RangedAttribute("attributeslib:crit_damage", 1.5D, 1.0D, 100.0D).setSyncable(true);
 
         /**
          * Bonus physical damage dealt equal to enemy's current health. Base value = (0.0) = 0%
@@ -84,7 +90,8 @@ public class ALObjects {
         /**
          * Experience mulitplier, from killing mobs or breaking ores. Base value = (1.0) = 100% xp gained.
          */
-        public static final Attribute EXPERIENCE_GAINED = new RangedAttribute("attributeslib:experience_gained", 1.0D, 0.0D, 1000.0D).setSyncable(true);
+        // Use AdditionalEntityAttributes.DROPPED_EXPERIENCE instead
+        //public static final Attribute EXPERIENCE_GAINED = new RangedAttribute("attributeslib:experience_gained", 1.0D, 0.0D, 1000.0D).setSyncable(true);
 
         /**
          * Bonus magic damage that burns enemies hit. Base value = (0.0) = 0 damage
@@ -144,7 +151,6 @@ public class ALObjects {
         private static void register(){
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("draw_speed"), DRAW_SPEED);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("crit_chance"), CRIT_CHANCE);
-            Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("crit_damage"), CRIT_DAMAGE);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("cold_damage"), COLD_DAMAGE);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("fire_damage"), FIRE_DAMAGE);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("life_steal"), LIFE_STEAL);
@@ -152,9 +158,8 @@ public class ALObjects {
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("overheal"), OVERHEAL);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("ghost_health"), GHOST_HEALTH);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("mining_speed"), MINING_SPEED);
-            Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("arrow_damage"), ARROW_DAMAGE);
+            //Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("arrow_damage"), ARROW_DAMAGE);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("arrow_velocity"), ARROW_VELOCITY);
-            Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("experience_gained"), EXPERIENCE_GAINED);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("healing_received"), HEALING_RECEIVED);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("armor_pierce"), ARMOR_PIERCE);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("armor_shred"), ARMOR_SHRED);
@@ -224,7 +229,7 @@ public class ALObjects {
 
     public static class Particles {
 
-    //   public static final RegistryObject<SimpleParticleType> APOTH_CRIT = R.particle("apoth_crit", () -> new SimpleParticleType(false));
+        public static final SimpleParticleType APOTH_CRIT = FabricParticleTypes.simple();
 
         @ApiStatus.Internal
         public static void bootstrap() {}
@@ -233,10 +238,13 @@ public class ALObjects {
 
     public static class Sounds {
 
-        public static final RegistryObject<SoundEvent> DODGE = R.sound("dodge");
+        public static final ResourceLocation DODGE_ID = AttributesLib.loc("dodge");
+        public static final SoundEvent DODGE = SoundEvent.createVariableRangeEvent(DODGE_ID);
 
         @ApiStatus.Internal
-        public static void bootstrap() {}
+        public static void bootstrap() {
+            Registry.register(BuiltInRegistries.SOUND_EVENT, DODGE_ID, DODGE);
+        }
 
     }
 

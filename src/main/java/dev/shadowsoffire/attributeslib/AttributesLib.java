@@ -2,20 +2,22 @@ package dev.shadowsoffire.attributeslib;
 
 import java.util.function.BiConsumer;
 
+import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
+import dev.shadowsoffire.attributeslib.util.FlyingAbility;
 import io.github.fabricators_of_create.porting_lib.attributes.PortingLibAttributes;
 import io.github.fabricators_of_create.porting_lib.util.RegistryObject;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import dev.shadowsoffire.attributeslib.api.ALObjects;
-import dev.shadowsoffire.attributeslib.compat.CuriosCompat;
+import dev.shadowsoffire.attributeslib.compat.TrinketsCompat;
 import dev.shadowsoffire.attributeslib.impl.AttributeEvents;
-import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
 import dev.shadowsoffire.placebo.registry.DeferredHelper;
 import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
@@ -35,7 +37,6 @@ public class AttributesLib implements ModInitializer {
 
     public static final String MODID = "attributeslib";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
-    public static final DeferredHelper R = DeferredHelper.create(MODID);
 
     /**
      * Static record of {@link Player#getAttackStrengthScale(float)} for use in damage events.<br>
@@ -50,26 +51,20 @@ public class AttributesLib implements ModInitializer {
         AttributeEvents.init();
 
 //        MessageHelper.registerMessage(CHANNEL, 0, new CritParticleMessage.Provider());
+        CritParticleMessage.init();
         ALObjects.bootstrap();
+        FlyingAbility.init();
 
-        //MinecraftForge.EVENT_BUS.register(ALObjects.MobEffects.KNOWLEDGE.get());
-
-            MobEffects.BLINDNESS.addAttributeModifier(Attributes.FOLLOW_RANGE, "f8c3de3d-1fea-4d7c-a8b0-22f63c4c3454", -0.75, Operation.MULTIPLY_TOTAL);
-            if (MobEffects.SLOW_FALLING.getAttributeModifiers().isEmpty()) {
-                MobEffects.SLOW_FALLING.addAttributeModifier(PortingLibAttributes.ENTITY_GRAVITY, "A5B6CF2A-2F7C-31EF-9022-7C3E7D5E6ABA", -0.07, Operation.ADDITION);
-            }
+        Registry.register(BuiltInRegistries.PARTICLE_TYPE, loc("apoth_crit"), ALObjects.Particles.APOTH_CRIT);
+        MobEffects.BLINDNESS.addAttributeModifier(Attributes.FOLLOW_RANGE, "f8c3de3d-1fea-4d7c-a8b0-22f63c4c3454", -0.75, Operation.MULTIPLY_TOTAL);
+        if (MobEffects.SLOW_FALLING.getAttributeModifiers().isEmpty()) {
+            MobEffects.SLOW_FALLING.addAttributeModifier(PortingLibAttributes.ENTITY_GRAVITY, "A5B6CF2A-2F7C-31EF-9022-7C3E7D5E6ABA", -0.07, Operation.ADDITION);
+        }
         AttributeSupplier playerAttribs = DefaultAttributes.getSupplier(EntityType.PLAYER);
         for (Attribute attr : BuiltInRegistries.ATTRIBUTE.stream().toList()) {
             if (playerAttribs.hasAttribute(attr)) attr.setSyncable(true);
         }
-        if (FabricLoader.getInstance().isModLoaded("trinkets")) CuriosCompat.init();
-    }
-
-
-    @SafeVarargs
-    private static void addAll(EntityType<? extends LivingEntity> type, BiConsumer<EntityType<? extends LivingEntity>, Attribute> add, RegistryObject<Attribute>... attribs) {
-        for (RegistryObject<Attribute> a : attribs)
-            add.accept(type, a.get());
+        if (FabricLoader.getInstance().isModLoaded("trinkets")) TrinketsCompat.init();
     }
 
     @Environment(EnvType.CLIENT)
