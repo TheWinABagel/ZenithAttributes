@@ -20,7 +20,7 @@ public class PercentBasedAttribute extends RangedAttribute implements IFormattab
 
     @Override
     public MutableComponent toValueComponent(Operation op, double value, TooltipFlag flag) {
-        return Component.translatable("attributeslib.value.percent", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(value * 100));
+        return Component.translatable("zenith_attributes.value.percent", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(value * 100));
     }
 
 }

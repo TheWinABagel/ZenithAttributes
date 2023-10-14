@@ -32,15 +32,15 @@ public class BooleanAttribute extends Attribute implements IFormattableAttribute
     @Override
     public MutableComponent toValueComponent(@Nullable Operation op, double value, TooltipFlag flag) {
         if (op == null) {
-            return Component.translatable("attributeslib.value.boolean." + (value > 0 ? "enabled" : "disabled"));
+            return Component.translatable("zenith_attributes.value.boolean." + (value > 0 ? "enabled" : "disabled"));
         }
         else if (op == Operation.ADDITION && (int) value == 1) {
-            return Component.translatable("attributeslib.value.boolean.enable");
+            return Component.translatable("zenith_attributes.value.boolean.enable");
         }
         else if (op == Operation.MULTIPLY_TOTAL && (int) value == -1) {
-            return Component.translatable("attributeslib.value.boolean.force_disable");
+            return Component.translatable("zenith_attributes.value.boolean.force_disable");
         }
-        else return Component.translatable("attributeslib.value.boolean.invalid");
+        else return Component.translatable("zenith_attributes.value.boolean.invalid");
     }
 
     @Override
@@ -51,11 +51,11 @@ public class BooleanAttribute extends Attribute implements IFormattableAttribute
         MutableComponent comp;
 
         if (value > 0.0D) {
-            comp = Component.translatable("attributeslib.modifier.bool", this.toValueComponent(modif.getOperation(), value, flag), Component.translatable(attr.getDescriptionId())).withStyle(ChatFormatting.BLUE);
+            comp = Component.translatable("zenith_attributes.modifier.bool", this.toValueComponent(modif.getOperation(), value, flag), Component.translatable(attr.getDescriptionId())).withStyle(ChatFormatting.BLUE);
         }
         else {
             value *= -1.0D;
-            comp = Component.translatable("attributeslib.modifier.bool", this.toValueComponent(modif.getOperation(), value, flag), Component.translatable(attr.getDescriptionId())).withStyle(ChatFormatting.RED);
+            comp = Component.translatable("zenith_attributes.modifier.bool", this.toValueComponent(modif.getOperation(), value, flag), Component.translatable(attr.getDescriptionId())).withStyle(ChatFormatting.RED);
         }
 
         return comp.append(this.getDebugInfo(modif, flag));

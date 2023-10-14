@@ -44,14 +44,14 @@ public interface IFormattableAttribute {
         // but percent-based is the real desire.
         // For Swim Speed, the implementation is percent-based, but no additional tricks are performed.
         if (this == Attributes.KNOCKBACK_RESISTANCE || this == PortingLibAttributes.SWIM_SPEED) {
-            return Component.translatable("attributeslib.value.percent", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(value * 100));
+            return Component.translatable("zenith_attributes.value.percent", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(value * 100));
         }
         // Speed has no metric, so displaying everything as percent works better for the user.
         // However, Speed also operates in that the default is 0.1, not 1, so we have to special-case it instead of including it above.
         if (this == Attributes.MOVEMENT_SPEED && isNullOrAddition(op)) {
-            return Component.translatable("attributeslib.value.percent", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(value * 1000));
+            return Component.translatable("zenith_attributes.value.percent", ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(value * 1000));
         }
-        String key = isNullOrAddition(op) ? "attributeslib.value.flat" : "attributeslib.value.percent";
+        String key = isNullOrAddition(op) ? "zenith_attributes.value.flat" : "zenith_attributes.value.percent";
         return Component.translatable(key, ItemStack.ATTRIBUTE_MODIFIER_FORMAT.format(isNullOrAddition(op) ? value : value * 100));
     }
 
@@ -72,11 +72,11 @@ public interface IFormattableAttribute {
         MutableComponent comp;
 
         if (value > 0.0D) {
-            comp = Component.translatable("attributeslib.modifier.plus", this.toValueComponent(modif.getOperation(), value, flag), Component.translatable(attr.getDescriptionId())).withStyle(ChatFormatting.BLUE);
+            comp = Component.translatable("zenith_attributes.modifier.plus", this.toValueComponent(modif.getOperation(), value, flag), Component.translatable(attr.getDescriptionId())).withStyle(ChatFormatting.BLUE);
         }
         else {
             value *= -1.0D;
-            comp = Component.translatable("attributeslib.modifier.take", this.toValueComponent(modif.getOperation(), value, flag), Component.translatable(attr.getDescriptionId())).withStyle(ChatFormatting.RED);
+            comp = Component.translatable("zenith_attributes.modifier.take", this.toValueComponent(modif.getOperation(), value, flag), Component.translatable(attr.getDescriptionId())).withStyle(ChatFormatting.RED);
         }
 
         return comp.append(this.getDebugInfo(modif, flag));
@@ -120,7 +120,6 @@ public interface IFormattableAttribute {
     default UUID getBaseUUID() {
         if (this == Attributes.ATTACK_DAMAGE) return AttributeHelper.BASE_ATTACK_DAMAGE;
         else if (this == Attributes.ATTACK_SPEED) return AttributeHelper.BASE_ATTACK_SPEED;
-        else if (this == PortingLibAttributes.ENTITY_REACH) return AttributeHelper.BASE_ENTITY_REACH;
         else if (this == ReachEntityAttributes.ATTACK_RANGE) return AttributeHelper.BASE_ENTITY_REACH;
         return null;
     }

@@ -35,7 +35,7 @@ import net.minecraft.world.item.TooltipFlag;
 
 public class AttributesLib implements ModInitializer {
 
-    public static final String MODID = "attributeslib";
+    public static final String MODID = "zenith_attributes";
     public static final Logger LOGGER = LogManager.getLogger(MODID);
 
     /**

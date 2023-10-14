@@ -16,7 +16,7 @@ import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
 import java.util.Collection;
 import java.util.List;
 
-@Mixin(EffectRenderingInventoryScreen.class)
+@Mixin(value = EffectRenderingInventoryScreen.class, priority = 500)
 public class EffectRenderingInventoryScreenMixin {
 
     @Unique private MobEffectInstance mobEffect;

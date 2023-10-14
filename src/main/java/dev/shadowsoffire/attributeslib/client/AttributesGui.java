@@ -88,7 +88,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
         this.topPos = parent.topPos;
         this.toggleBtn = new ImageButton(parent.leftPos + 63, parent.topPos + 10, 10, 10, WIDTH, 0, 10, TEXTURES, 256, 256, btn -> {
             this.toggleVisibility();
-        }, Component.translatable("attributeslib.gui.show_attributes"));
+        }, Component.translatable("zenith_attributes.gui.show_attributes"));
         if (this.parent.children().size() > 1) {
             GuiEventListener btn = this.parent.children().get(0);
             this.recipeBookButton = btn instanceof ImageButton imgBtn ? imgBtn : null;
@@ -169,7 +169,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
             idx++;
         }
         this.renderTooltip(gfx, mouseX, mouseY);
-        gfx.drawString(font, Component.translatable("attributeslib.gui.attributes"), this.leftPos + 8, this.topPos + 5, 0x404040, false);
+        gfx.drawString(font, Component.translatable("zenith_attributes.gui.attributes"), this.leftPos + 8, this.topPos + 5, 0x404040, false);
         gfx.drawString(font, Component.literal("Hide Unchanged"), this.leftPos + 20, this.topPos + 152, 0x404040, false);
     }
 
@@ -215,12 +215,15 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
 
             MutableComponent baseVal = fAttr.toValueComponent(null, inst.getBaseValue(), AttributesLib.getTooltipFlag());
 
-            baseVal = Component.translatable("attributeslib.gui.base", baseVal);
+            baseVal = Component.translatable("zenith_attributes.gui.base", baseVal);
             if (attr instanceof RangedAttribute ra) {
                 Component min = fAttr.toValueComponent(null, ra.getMinValue(), AttributesLib.getTooltipFlag());
-                min = Component.translatable("attributeslib.gui.min", min);
-                Component max = fAttr.toValueComponent(null, ra.getMaxValue(), AttributesLib.getTooltipFlag());
-                max = Component.translatable("attributeslib.gui.max", max);
+                min = Component.translatable("zenith_attributes.gui.min", min);
+                double maxValue = ra.getMaxValue();
+                if (maxValue > 4096D) maxValue = 4096D; // to stop Double.MAXVALUE madness
+                Component max = fAttr.toValueComponent(null, maxValue, AttributesLib.getTooltipFlag());
+
+                max = Component.translatable("zenith_attributes.gui.max", max);
                 list.add(Component.translatable("%s \u2507 %s \u2507 %s", baseVal, min, max).withStyle(ChatFormatting.GRAY));
             }
             else {
@@ -234,7 +237,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
 
             if (inst.getModifiers().stream().anyMatch(modif -> modif.getAmount() != 0)) {
                 this.addComp(CommonComponents.EMPTY, finalTooltip);
-                this.addComp(Component.translatable("attributeslib.gui.modifiers").withStyle(ChatFormatting.GOLD), finalTooltip);
+                this.addComp(Component.translatable("zenith_attributes.gui.modifiers").withStyle(ChatFormatting.GOLD), finalTooltip);
 
                 Map<UUID, ModifierSource<?>> modifiersToSources = new HashMap<>();
 
@@ -350,7 +353,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
 
     @Override
     public boolean mouseClicked(double pMouseX, double pMouseY, int pButton) {
-        if (!this.open || !this.isScrollBarActive())return false;
+        if (!this.open || !this.isScrollBarActive()) return false;
         this.scrolling = false;
         int left = this.leftPos + 111;
         int top = this.topPos + 15;

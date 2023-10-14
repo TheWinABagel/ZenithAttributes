@@ -8,6 +8,9 @@ import dev.shadowsoffire.attributeslib.api.ALCombatRules;
 import net.minecraft.world.damagesource.CombatRules;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(CombatRules.class)
 public class CombatRulesMixin {
@@ -15,9 +18,9 @@ public class CombatRulesMixin {
     /**
      * @see {@link ALCombatRules#getDamageAfterProtection(net.minecraft.world.entity.LivingEntity, net.minecraft.world.damagesource.DamageSource, float, float)}
      */
-    @Overwrite
-    public static float getDamageAfterMagicAbsorb(float damage, float protPoints) {
-        return damage * ALCombatRules.getProtDamageReduction(protPoints);
+    @Inject(method ="getDamageAfterMagicAbsorb", at = @At("HEAD"), cancellable = true)
+    private static void getDamageAfterMagicAbsorb(float damage, float protPoints, CallbackInfoReturnable<Float> cir) {
+        cir.setReturnValue(damage * ALCombatRules.getProtDamageReduction(protPoints));
     }
 
     /**

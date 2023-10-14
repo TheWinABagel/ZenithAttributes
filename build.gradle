@@ -46,7 +46,6 @@ repositories {
 }
 
 dependencies {
-	// To change the versions see the gradle.properties file
 	minecraft "com.mojang:minecraft:${project.minecraft_version}"
 	mappings loom.layered() {
 		officialMojangMappings()
@@ -56,17 +55,20 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Porting lib
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:Porting-Lib:${project.port_lib_version}") // included with fakerlib
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:Porting-Lib:${project.port_lib_version}"){ // included with fakerlib
+		exclude(group: "io.github.fabricators_of_create.Porting-Lib", module: "networking")
+		exclude(group: "io.github.fabricators_of_create.Porting-Lib", module: "loot")
+	}
 
 	// CCA + PAL
 	modImplementation(include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"))
 	modImplementation(include("io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"))
 
 	// Trinkets
-	modCompileOnly modRuntimeOnly("dev.emi:trinkets:${project.trinkets_version}")
+	modCompileOnly(modRuntimeOnly("dev.emi:trinkets:${project.trinkets_version}"))
 
 	// Reach entity attributes
-	modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}"))
+	modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}")
 
 	// Projectile Damage Attribute
 	modImplementation(include("maven.modrinth:projectile-damage-attribute:${project.projectile_damage}-fabric"))
@@ -74,8 +76,12 @@ dependencies {
 	// Additional Entity Attributes
 	modImplementation(include("maven.modrinth:AdditionalEntityAttributes:${project.additional_attributes}"))
 
+	// Mixin Extras + Mixin^2 for mod compat
+	include(implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:0.2.0-beta.10")))
+	include(implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:0.0.2")))
+
 	// Fakerlib
-	modImplementation( "dev.shadowsoffire.placebo:placebo-fabric-1.20.1:${project.fakerlib_version}")
+	modImplementation("dev.shadowsoffire.placebo:placebo-fabric-1.20.1:${project.fakerlib_version}")
 
 	// REI + Arch
 	modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
@@ -86,7 +92,7 @@ dependencies {
 }
 
 loom {
-	accessWidenerPath = file("src/main/resources/attributeslib.aw")
+	accessWidenerPath = file("src/main/resources/zenith_attributes.aw")
 }
 
 processResources {

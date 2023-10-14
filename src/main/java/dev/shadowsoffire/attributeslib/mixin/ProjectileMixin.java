@@ -1,7 +1,6 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
 import dev.shadowsoffire.attributeslib.api.ALObjects;
-import dev.shadowsoffire.attributeslib.api.ProjectileImpactCallback;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.LivingEntity;
@@ -30,9 +29,4 @@ public class ProjectileMixin {
         }
     }
 
-    @Inject(method = "onHit", at = @At("HEAD"), cancellable = true)
-    private void onProjectileHit(HitResult result, CallbackInfo ci) {
-        if (ProjectileImpactCallback.PROJECTILE_IMPACT.invoker().onImpact((Projectile) (Object) this, result))
-            ci.cancel();
-    }
 }
