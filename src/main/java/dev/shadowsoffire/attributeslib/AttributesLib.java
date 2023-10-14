@@ -50,7 +50,6 @@ public class AttributesLib implements ModInitializer {
     public void onInitialize() {
         AttributeEvents.init();
 
-//        MessageHelper.registerMessage(CHANNEL, 0, new CritParticleMessage.Provider());
         CritParticleMessage.init();
         ALObjects.bootstrap();
         FlyingAbility.init();
