@@ -1,7 +1,6 @@
 {
   "replace": false,
   "values": [
-    "zenith_attributes:bleeding",
     "zenith_attributes:detonation",
     "zenith_attributes:fire_damage",
     "zenith_attributes:cold_damage"

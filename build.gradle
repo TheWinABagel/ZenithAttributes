@@ -55,10 +55,23 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Porting lib
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:Porting-Lib:${project.port_lib_version}"){ // included with fakerlib
-		exclude(group: "io.github.fabricators_of_create.Porting-Lib", module: "networking")
-		exclude(group: "io.github.fabricators_of_create.Porting-Lib", module: "loot")
-	}
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:accessors:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:attributes:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:base:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:client_events:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:common:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:core:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:entity:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:extensions:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:lazy_registration:${project.port_lib_version}")
+	//modImplementation("io.github.fabricators_of_create.Porting-Lib:loot:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:mixin_extensions:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:models:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:registries:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:tags:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:tool_actions:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:transfer:${project.port_lib_version}")
+	modImplementation("io.github.fabricators_of_create.Porting-Lib:utility:${project.port_lib_version}")
 
 	// CCA + PAL
 	modImplementation(include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"))
