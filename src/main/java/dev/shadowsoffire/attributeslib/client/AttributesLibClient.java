@@ -72,10 +72,10 @@ public class AttributesLibClient implements ClientModInitializer {
             int markIdx1 = -1, markIdx2 = -1;
             for (int i = 0; i < list.size(); i++) {
                 if (list.get(i).getContents() instanceof LiteralContents tc) {
-                    if ("APOTH_REMOVE_MARKER".equals(tc.text())) {
+                    if ("ZENITH_REMOVE_MARKER".equals(tc.text())) {
                         markIdx1 = i;
                     }
-                    if ("APOTH_REMOVE_MARKER_2".equals(tc.text())) {
+                    if ("ZENITH_REMOVE_MARKER_2".equals(tc.text())) {
                         markIdx2 = i;
                         break;
                     }

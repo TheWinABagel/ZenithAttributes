@@ -269,7 +269,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
                         color = ChatFormatting.RED;
                     }
                     Component valueComp2 = fAttr.toValueComponent(op, opValue, AttributesLib.getTooltipFlag()).withStyle(color);
-                    Component comp = Component.translatable("attributeslib.gui." + op.name().toLowerCase(Locale.ROOT), valueComp2).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
+                    Component comp = Component.translatable("zenith_attributes.gui." + op.name().toLowerCase(Locale.ROOT), valueComp2).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC);
                     opValues[op.ordinal()] = comp;
                 }
 

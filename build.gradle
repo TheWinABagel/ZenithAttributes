@@ -1,6 +1,8 @@
 plugins {
 	id 'fabric-loom' version '1.3-SNAPSHOT'
 	id 'maven-publish'
+	id "com.modrinth.minotaur" version "2.+"
+	id 'net.darkhax.curseforgegradle' version "1.1.16"
 }
 
 version = project.mod_version
@@ -102,6 +104,10 @@ dependencies {
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${project.rei_version}"
 
+
+	//modImplementation "maven.modrinth:obscure-api:16"
+	//modImplementation "maven.modrinth:aquamirae:ouUaC54p"
+
 }
 
 loom {
@@ -151,4 +157,33 @@ publishing {
 		// The repositories here will be used for publishing your artifact, not for
 		// retrieving dependencies.
 	}
+}
+
+modrinth {
+	token = System.getenv("MODRINTH_TOKEN")
+	projectId = "zenith-attributes"
+	versionType = "beta"
+	versionName = "Zenith Attributes " + project.version
+	uploadFile = remapJar
+	gameVersions = ["1.20.1"]
+	loaders = ["fabric"]
+	changelog = "[Changelog](https://github.com/TheWinABagel/ZenithAttributes/blob/master/changelog.md)"
+	//debugMode = true
+	dependencies {
+		required.project "fabric-api"
+		required.project("fakerlib")
+		embedded.project("porting_lib")
+	}
+}
+
+task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
+	apiToken = System.getenv("cf_token")
+	//debugMode = true
+	def mainFile = upload(853197, jar)
+	mainFile.changelog = "https://github.com/TheWinABagel/FakerLib/blob/master/changelog.md"
+	mainFile.releaseType = "beta"
+	mainFile.addJavaVersion("17")
+	mainFile.addGameVersion("1.20.1")
+	mainFile.addModLoader("fabric")
+	mainFile.displayName = project.name + "-" + project.version
 }
