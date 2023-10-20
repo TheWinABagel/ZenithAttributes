@@ -169,5 +169,11 @@
 
     "death.attack.zenith_attributes:cold_damage": "%1$s was frozen to death",
     "death.attack.zenith_attributes:cold_damage.item": "%1$s was frozen to death by %2$s using %3$s",
-    "death.attack.zenith_attributes:cold_damage.player": "%1$s was frozen to death whilst fighting %2$s"
+    "death.attack.zenith_attributes:cold_damage.player": "%1$s was frozen to death whilst fighting %2$s",
+
+	"comment_id": "Temporary localization hell",
+	"porting_lib.swim_speed": "Swim Speed",
+	"porting_lib.name_tag_distance": "Nametag Render Distance",
+	"porting_lib.entity_gravity": "Gravity",
+	"porting_lib.step_height": "Step Height"
 }

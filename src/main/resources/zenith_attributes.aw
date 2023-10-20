@@ -14,3 +14,4 @@ accessible method net/minecraft/network/chat/TextColor <init> (ILjava/lang/Strin
 accessible field net/minecraft/network/chat/TextColor NAMED_COLORS Ljava/util/Map;
 accessible field net/minecraft/world/entity/projectile/AbstractArrow piercingIgnoreEntityIds Lit/unimi/dsi/fastutil/ints/IntOpenHashSet;
 mutable field net/minecraft/network/chat/TextColor NAMED_COLORS Ljava/util/Map;
+accessible field net/minecraft/world/entity/ai/attributes/AttributeSupplier$Builder builder Ljava/util/Map;

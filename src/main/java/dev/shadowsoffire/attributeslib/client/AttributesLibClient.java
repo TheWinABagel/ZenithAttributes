@@ -16,6 +16,7 @@ import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Pair;
 
+import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
 import dev.shadowsoffire.attributeslib.api.AttributeHelper;
@@ -25,9 +26,11 @@ import dev.shadowsoffire.attributeslib.api.client.GatherEffectScreenTooltipsEven
 import dev.shadowsoffire.attributeslib.api.client.GatherSkippedAttributeTooltipsEvent;
 import dev.shadowsoffire.attributeslib.api.client.ItemTooltipCallbackWithPlayer;
 import net.fabricmc.api.ClientModInitializer;
+import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
+import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
@@ -65,6 +68,11 @@ public class AttributesLibClient implements ClientModInitializer {
 
         potionTooltips();
         ParticleFactoryRegistry.getInstance().register(ALObjects.Particles.APOTH_CRIT, CritParticle.Provider::new);
+
+        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
+            AttributesLib.LOGGER.info("Zenith attributes config is reloading on the client");
+            AttributesLib.reload(false);
+        });
     }
 
     public void tooltips() {

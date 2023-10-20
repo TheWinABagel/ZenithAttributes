@@ -179,11 +179,11 @@ modrinth {
 task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
 	apiToken = System.getenv("cf_token")
 	//debugMode = true
-	def mainFile = upload(853197, jar)
-	mainFile.changelog = "https://github.com/TheWinABagel/FakerLib/blob/master/changelog.md"
+	def mainFile = upload(910078, remapJar)
+	mainFile.changelog = "https://github.com/TheWinABagel/ZenithAttributes/blob/master/changelog.md"
 	mainFile.releaseType = "beta"
-	mainFile.addJavaVersion("17")
+	//mainFile.addJavaVersion("17")
 	mainFile.addGameVersion("1.20.1")
 	mainFile.addModLoader("fabric")
-	mainFile.displayName = project.name + "-" + project.version
+	mainFile.displayName = "zenith_attributes-" + project.version
 }

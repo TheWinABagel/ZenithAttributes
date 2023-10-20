@@ -14,6 +14,7 @@ import com.mojang.blaze3d.vertex.PoseStack;
 
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.IFormattableAttribute;
+import dev.shadowsoffire.attributeslib.util.AttributeInfo;
 import dev.shadowsoffire.placebo.PlaceboClient;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -101,6 +102,8 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
         this.data.clear();
         BuiltInRegistries.ATTRIBUTE.stream().map(this.player::getAttribute).filter(Objects::nonNull).filter(ai -> {
             if (!hideUnchanged) return true;
+            AttributeInfo info = AttributesLib.getAttrInfo(ai.getAttribute());
+            if (!info.getShowsInMenu()) return false;
             return ai.getBaseValue() != ai.getValue();
         }).forEach(this.data::add);
         this.data.sort(this::compareAttrs);
@@ -178,6 +181,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
         AttributeInstance inst = this.getHoveredSlot(mouseX, mouseY);
         if (inst != null) {
             Attribute attr = inst.getAttribute();
+
             IFormattableAttribute fAttr = (IFormattableAttribute) attr;
             List<Component> list = new ArrayList<>();
             MutableComponent name = Component.translatable(attr.getDescriptionId()).withStyle(Style.EMPTY.withColor(ChatFormatting.GOLD).withUnderlined(true));

@@ -5,6 +5,7 @@
   "mixins": [
     "AttributeInstanceAccessor",
     "AttributeMixin",
+    "CollectAttributesPlayerMixin",
     "CombatRulesMixin",
     "ItemStackMixin",
     "LivingEntityMixin",
