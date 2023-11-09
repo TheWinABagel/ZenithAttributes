@@ -16,10 +16,12 @@ import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEn
 import io.github.fabricators_of_create.porting_lib.entity.events.player.PlayerEvents;
 import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.entity.event.v1.FabricElytraItem;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
+import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -40,14 +42,10 @@ import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.TridentItem;
 import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.EntityHitResult;
+import net.puffish.skillsmod.access.EntityAttributeInstanceAccess;
+import net.puffish.skillsmod.server.PlayerAttributes;
 
 public class AttributeEvents {
-/*
-    @SubscribeEvent
-    public void fixChangedAttributes(PlayerLoggedInEvent e) {
-        AttributeMap map = e.getEntity().getAttributes();
-        map.getInstance(ForgeMod.STEP_HEIGHT_ADDITION).setBaseValue(0.6);
-    }*/
 
     private static boolean canBenefitFromDrawSpeed(ItemStack stack) {
         return stack.getItem() instanceof ProjectileWeaponItem || stack.getItem() instanceof TridentItem;
@@ -66,6 +64,7 @@ public class AttributeEvents {
         dodgeProjectile();
         affixModifiers();
         //trackCooldown();
+        fixPufferfishSkills();
     }
 
     /**
@@ -352,6 +351,26 @@ public class AttributeEvents {
                 e.addModifier(ALObjects.Attributes.ELYTRA_FLIGHT, new AttributeModifier(AttributeHelper.ELYTRA_FLIGHT_UUID, () -> "zenith_attributes:elytra_item_flight", 1, Operation.ADDITION));
             }
         });
+    }
+
+    public static void fixPufferfishSkills() {
+        if (FabricLoader.getInstance().isModLoaded("puffish_skills")) {
+            LivingEntityDamageEvents.HURT.register(e -> {
+                if (e.damageSource.getEntity() instanceof Player player) {
+                    if (e.damageSource.is(DamageTypeTags.IS_PROJECTILE)) {
+                        var attribute = ((EntityAttributeInstanceAccess) player.getAttribute(PlayerAttributes.RANGED_DAMAGE));
+                        if (attribute != null) {
+                            e.damageAmount = (float) attribute.computeIncreasedValueForInitial(e.damageAmount);
+                        }
+                    } else {
+                        var attribute = ((EntityAttributeInstanceAccess) player.getAttribute(PlayerAttributes.MELEE_DAMAGE));
+                        if (attribute != null) {
+                            e.damageAmount = (float) attribute.computeIncreasedValueForInitial(e.damageAmount);
+                        }
+                    }
+                }
+            });
+        }
     }
 
 }

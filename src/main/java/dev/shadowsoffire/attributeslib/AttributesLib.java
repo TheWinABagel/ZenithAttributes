@@ -76,7 +76,6 @@ public class AttributesLib implements ModInitializer {
 
         if (FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)) {
             ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-                LOGGER.info("Zenith attributes config is reloading on the server");
                 AttributesLib.reload(false);
             });
         }

@@ -31,7 +31,6 @@ public class AttributeInfo {
     }
 
     public static AttributeInfo load(Attribute attribute, Configuration cfg) {
-        AttributesLib.LOGGER.info("Attribute Namespace: {}", attribute);
         String category = BuiltInRegistries.ATTRIBUTE.getKey(attribute).toString();
         boolean modifiable = cfg.getBoolean("Modifiable", category, true, "If this attribute can be modified with Zenith's all attribute increase.");
 

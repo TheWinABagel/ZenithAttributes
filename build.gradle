@@ -44,6 +44,7 @@ repositories {
 	maven { url "https://maven.terraformersmc.com" }
 	maven { url "https://cursemaven.com" }
 	maven { url "https://maven.bai.lol" }
+	maven { url 'https://maven.nucleoid.xyz' }
 	mavenLocal()
 }
 
@@ -58,22 +59,22 @@ dependencies {
 
 	// Porting lib
 	modImplementation("io.github.fabricators_of_create.Porting-Lib:accessors:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:attributes:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:base:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:client_events:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:common:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:core:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:entity:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:extensions:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:lazy_registration:${project.port_lib_version}")
-	//modImplementation("io.github.fabricators_of_create.Porting-Lib:loot:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:mixin_extensions:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:models:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:registries:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:tags:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:tool_actions:${project.port_lib_version}")
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:attributes:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:base:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:client_events:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:common:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:core:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:entity:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:extensions:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:lazy_registration:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:loot:2.1.1102+1.20-entity-refactor")) //Using a more recent version... hopefully fine?
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:mixin_extensions:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:models:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:registries:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:tags:${project.port_lib_version}"))
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:tool_actions:${project.port_lib_version}"))
 	modImplementation("io.github.fabricators_of_create.Porting-Lib:transfer:${project.port_lib_version}")
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:utility:${project.port_lib_version}")
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:utility:${project.port_lib_version}"))
 
 	// CCA + PAL
 	modImplementation(include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"))
@@ -104,9 +105,23 @@ dependencies {
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${project.rei_version}"
 
+	// Testing polymer incompat
+	modCompileOnly("eu.pb4:sgui:1.2.2+1.20")
+	modCompileOnly("eu.pb4:placeholder-api:2.1.3+1.20.1")
+	modCompileOnly('xyz.nucleoid:server-translations-api:2.0.0+1.20')
+	modCompileOnly('eu.pb4:polymer-core:0.5.15+1.20.1')
+	modCompileOnly('eu.pb4:polymer-resource-pack:0.5.15+1.20.1')
+	modCompileOnly('eu.pb4:polymer-virtual-entity:0.5.15+1.20.1')
+	modCompileOnly('eu.pb4:predicate-api:0.2.1+1.20.1')
+	modCompileOnly("eu.pb4:common-protection-api:1.0.0")
+
+	modCompileOnly("me.lucko:fabric-permissions-api:0.2-SNAPSHOT")
+	modCompileOnly "curse.maven:universal-graves-497175:4754378"
 
 	//modImplementation "maven.modrinth:obscure-api:16"
 	//modImplementation "maven.modrinth:aquamirae:ouUaC54p"
+
+	modCompileOnly "curse.maven:puffish-skills-835091:4809638"
 
 }
 

@@ -70,7 +70,6 @@ public class AttributesLibClient implements ClientModInitializer {
         ParticleFactoryRegistry.getInstance().register(ALObjects.Particles.APOTH_CRIT, CritParticle.Provider::new);
 
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            AttributesLib.LOGGER.info("Zenith attributes config is reloading on the client");
             AttributesLib.reload(false);
         });
     }
@@ -101,25 +100,6 @@ public class AttributesLibClient implements ClientModInitializer {
             }
             AddAttributeTooltipsEvent.EVENT.invoker().getTooltip(stack, player, list, it, context);
         });
-
-    }
-
-    public void addAttribComponent() { //Was redone with mixins, can delete?
-        ScreenEvents.AFTER_INIT.register((client, screen, scaledWidth, scaledHeight) -> {
-            if (screen instanceof InventoryScreen scn) {
-                var atrComp = new AttributesGui(scn);
-            //TODO figure this out
-
-                scn.setFocused(atrComp);
-                ScreenEvents.afterRender(screen).register((screen1, drawContext, mouseX, mouseY, tickDelta) -> {
-                scn.setFocused(atrComp);
-                //screen1.children().add(5, scn);
-                });
-            //    e.addListener(atrComp);
-            //    e.addListener(atrComp.toggleBtn);
-            //    e.addListener(atrComp.hideUnchangedBtn);
-                if (AttributesGui.wasOpen) atrComp.toggleVisibility();
-            }});
 
     }
 

@@ -15,14 +15,12 @@ import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
-@Mixin(value = Player.class, priority = 10)
+@Mixin(value = Player.class, priority = 5)
 public class CollectAttributesPlayerMixin {
 
     @Inject(method = "createAttributes", at = @At("RETURN"))
     private static void zenithCollectPlayerAttributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir){
-        List<Attribute> list= new ArrayList<>(cir.getReturnValue().builder.keySet().stream().toList());
-        AttributesLib.LOGGER.info("Attributes list: {}", list);
-        AttributesLib.playerAttributes = list;
+        AttributesLib.playerAttributes = new ArrayList<>(cir.getReturnValue().builder.keySet().stream().toList());
     }
 
 }
