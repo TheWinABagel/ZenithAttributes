@@ -45,6 +45,8 @@ repositories {
 	maven { url "https://cursemaven.com" }
 	maven { url "https://maven.bai.lol" }
 	maven { url 'https://maven.nucleoid.xyz' }
+	maven { url 'https://maven.wispforest.io' } //owo lib
+
 	mavenLocal()
 }
 
@@ -122,6 +124,11 @@ dependencies {
 	//modImplementation "maven.modrinth:aquamirae:ouUaC54p"
 
 	modCompileOnly "curse.maven:puffish-skills-835091:4809638"
+
+	modImplementation("io.wispforest:lavender:0.1.0-pre.6+1.20")
+
+	modImplementation("io.wispforest:owo-lib:0.11.0+1.20")
+	modImplementation "curse.maven:conjuring-422310:4580578"
 
 }
 

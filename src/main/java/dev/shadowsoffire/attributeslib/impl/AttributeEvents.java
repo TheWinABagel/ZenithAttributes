@@ -64,7 +64,7 @@ public class AttributeEvents {
         dodgeProjectile();
         affixModifiers();
         //trackCooldown();
-        fixPufferfishSkills();
+        ModCompat.init();
     }
 
     /**
@@ -351,26 +351,6 @@ public class AttributeEvents {
                 e.addModifier(ALObjects.Attributes.ELYTRA_FLIGHT, new AttributeModifier(AttributeHelper.ELYTRA_FLIGHT_UUID, () -> "zenith_attributes:elytra_item_flight", 1, Operation.ADDITION));
             }
         });
-    }
-
-    public static void fixPufferfishSkills() {
-        if (FabricLoader.getInstance().isModLoaded("puffish_skills")) {
-            LivingEntityDamageEvents.HURT.register(e -> {
-                if (e.damageSource.getEntity() instanceof Player player) {
-                    if (e.damageSource.is(DamageTypeTags.IS_PROJECTILE)) {
-                        var attribute = ((EntityAttributeInstanceAccess) player.getAttribute(PlayerAttributes.RANGED_DAMAGE));
-                        if (attribute != null) {
-                            e.damageAmount = (float) attribute.computeIncreasedValueForInitial(e.damageAmount);
-                        }
-                    } else {
-                        var attribute = ((EntityAttributeInstanceAccess) player.getAttribute(PlayerAttributes.MELEE_DAMAGE));
-                        if (attribute != null) {
-                            e.damageAmount = (float) attribute.computeIncreasedValueForInitial(e.damageAmount);
-                        }
-                    }
-                }
-            });
-        }
     }
 
 }

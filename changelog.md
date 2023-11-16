@@ -1,5 +1,9 @@
 
 
+## 0.0.7
+* ACTUALLY fix previous issue
+* Fix issue with Cojuring haste jewels
+
 ## 0.0.6
 * Fix crash caused by lack of null check in pufferfish skills compat
 
