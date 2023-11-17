@@ -20,6 +20,9 @@
 		],
 		"client": [
 			"dev.shadowsoffire.attributeslib.client.AttributesLibClient"
+		],
+		"mixinsquared": [
+			"dev.shadowsoffire.attributeslib.mixin.StepHeightMixinCanceller"
 		]
 	},
 	"mixins": [
@@ -30,7 +33,7 @@
 		"minecraft": "~1.20.1",
 		"java": ">=17",
 		"fabric-api": "*",
-		"fakerlib": ">=0.0.8"
+		"fakerlib": ">=0.0.7"
 	},
 	"suggests": {
 		"zenith": "*"

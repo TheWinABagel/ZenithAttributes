@@ -2,6 +2,7 @@ package dev.shadowsoffire.attributeslib.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.shadowsoffire.attributeslib.api.*;
+import dev.shadowsoffire.attributeslib.impl.AttributeEvents;
 import net.minecraft.util.Mth;
 import net.minecraft.world.entity.ai.attributes.AttributeMap;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
@@ -90,21 +91,20 @@ public abstract class LivingEntityMixin extends Entity {
         return ALCombatRules.getDamageAfterProtection((LivingEntity) (Object) this, src, amount, EnchantmentHelper.getDamageProtection(((LivingEntity)(Object) this).getArmorSlots(), src));
     }
 
-    @ModifyVariable(method = "heal", at = @At(value = "HEAD"))
+    @ModifyVariable(method = "heal", at = @At(value = "HEAD"), argsOnly = true)
     private float healEvent(float value){
         float amount = HealEvent.EVENT.invoker().onLivingHeal(this, value);
-        //AttributesLib.LOGGER.info("Heal event initialized, old heal {}, new heal {}", value, amount);
         return amount >= 0 ? amount : 0;
     }
 
     @Inject(method = "updateUsingItem", at = @At("HEAD"))
     private void useItemEvent(ItemStack usingItem, CallbackInfo ci){
         if (!usingItem.isEmpty())
-            this.useItemRemaining = UseItemTickEvent.EVENT.invoker().onLivingUse((LivingEntity) (Object) this, usingItem, this.useItemRemaining);
+            this.useItemRemaining = AttributeEvents.drawSpeed((LivingEntity) (Object) this, usingItem, this.useItemRemaining);
     }
 
-    @Inject(method = "createLivingAttributes", at = @At("RETURN"), require = 1, allow = 1)
-    private static void zenith_attributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir){
+    @Inject(method = "createLivingAttributes", at = @At("RETURN"))
+    private static void zenith_attributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
         cir.getReturnValue().add(ALObjects.Attributes.DRAW_SPEED)
         .add(ALObjects.Attributes.CRIT_CHANCE)
         .add(ALObjects.Attributes.COLD_DAMAGE)

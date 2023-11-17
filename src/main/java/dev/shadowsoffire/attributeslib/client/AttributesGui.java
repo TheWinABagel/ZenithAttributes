@@ -215,7 +215,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
                 }
             }
             MutableComponent valueComp = fAttr.toValueComponent(null, inst.getValue(), AttributesLib.getTooltipFlag());
-            list.add(Component.translatable("Current: %s", valueComp.withStyle(color)).withStyle(ChatFormatting.GRAY));
+            list.add(Component.translatable("zenith_attributes.gui.current", valueComp.withStyle(color)).withStyle(ChatFormatting.GRAY));
 
             MutableComponent baseVal = fAttr.toValueComponent(null, inst.getBaseValue(), AttributesLib.getTooltipFlag());
 

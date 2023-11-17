@@ -36,6 +36,7 @@ import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.entity.projectile.AbstractArrow;
 import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
@@ -44,6 +45,7 @@ import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.EntityHitResult;
 import net.puffish.skillsmod.access.EntityAttributeInstanceAccess;
 import net.puffish.skillsmod.server.PlayerAttributes;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
 public class AttributeEvents {
 
@@ -53,7 +55,6 @@ public class AttributeEvents {
 
     public static void init(){
         elytra();
-        drawSpeed();
         lifeStealOverheal();
         meleeDamageAttributes();
         apothCriticalStrike();
@@ -73,7 +74,7 @@ public class AttributeEvents {
     public static void elytra() {
         EntityElytraEvents.CUSTOM.register((entity, tickElytra) -> {
             if (entity instanceof Player p){
-                return p.getAttributeValue(ALObjects.Attributes.ELYTRA_FLIGHT) == 1;
+                return p.getAttributeValue(ALObjects.Attributes.ELYTRA_FLIGHT) > 0;
             }
             return false;
         });
@@ -81,12 +82,11 @@ public class AttributeEvents {
     }
 
     /**
-     * This event handler is the implementation for {link ALObjects#DRAW_SPEED}.<br>
+     * This is the implementation for {link ALObjects#DRAW_SPEED}.<br>
      * Each full point of draw speed provides an extra using tick per game tick.<br>
      * Each partial point of draw speed provides an extra using tick periodically.
      */
-    public static void drawSpeed() {
-        UseItemTickEvent.EVENT.register((entity, usingItem, useItemRemaining) -> {
+    public static int drawSpeed(Entity entity, ItemStack usingItem, int useItemRemaining) {
             if (entity instanceof Player player) {
                 double t = player.getAttribute(ALObjects.Attributes.DRAW_SPEED).getValue() - 1;
                 if (t == 0 || !canBenefitFromDrawSpeed(usingItem)) return useItemRemaining;
@@ -101,7 +101,6 @@ public class AttributeEvents {
                 if (t > 1) { // Every 100% triggers an immediate extra tick
                     t--;
                     return (useItemRemaining + offset);
-
                 }
 
                 if (t > 0.5F) { // Special case 0.5F so that values in (0.5, 1) don't round to 1.
@@ -114,7 +113,6 @@ public class AttributeEvents {
                 t--;
             }
             return useItemRemaining;
-        });
     }
 
     /**
@@ -232,7 +230,6 @@ public class AttributeEvents {
 
     public static void mobXp() {
         LivingEntityLootEvents.EXPERIENCE_DROP.register((i, attackingPlayer, entity) -> (int) (Support.getExperienceMod(attackingPlayer) * i));
-
     }
 
     /**
@@ -249,19 +246,18 @@ public class AttributeEvents {
     }
 
     /**
-     * Handles {link ALObjects#ARROW_DAMAGE} and {link ALObjects#ARROW_VELOCITY}
+     * Handles arrow velocity
+     * Injected via @See ProjectileMixin
      */
- /*   public void arrow(EntityJoinLevelEvent e) { //TODO uh yeah this exists, need to mixin into the thing that spawns arrows
-
-        if (e.getEntity() instanceof AbstractArrow arrow) {
-            if (arrow.level().isClientSide || arrow.getPersistentData().getBoolean("attributeslib.arrow.done")) return;
-            if (arrow.getOwner() instanceof LivingEntity le) {
-                arrow.setDeltaMovement(arrow.getDeltaMovement().scale(le.getAttributeValue(ALObjects.Attributes.ARROW_VELOCITY)));
-            }
-            arrow.getPersistentData().putBoolean("attributeslib.arrow.done", true);
+    public static void modifyArrowVelocity(Args args, AbstractArrow arrow, float velocity) {
+        if (arrow.level().isClientSide || arrow.getCustomData().getBoolean("zenith_attributes.arrow.done")) return;
+        if (arrow.getOwner() instanceof LivingEntity le) {
+            if (Double.isNaN(le.getAttributeValue(ALObjects.Attributes.ARROW_VELOCITY))) return;
+            args.set(3, (float) (velocity * le.getAttributeValue(ALObjects.Attributes.ARROW_VELOCITY)));
         }
+        arrow.getCustomData().putBoolean("zenith_attributes.arrow.done", true);
     }
-*/
+
     /**
      * Copied from {link MeleeAttackGoal#getAttackReachSqr}
      */
@@ -294,11 +290,9 @@ public class AttributeEvents {
                 }
             }
         });
-
     }
 
-    private static double getReach(Player entity)
-    {
+    private static double getReach(Player entity) {
         double range = entity.getAttributeValue(ReachEntityAttributes.ATTACK_RANGE);
         return range == 0 ? 0 : range + (entity.isCreative() ? 3 : 0);
     }

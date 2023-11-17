@@ -8,9 +8,11 @@ import java.util.Map;
 
 import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
 import dev.shadowsoffire.attributeslib.util.AttributeInfo;
+import dev.shadowsoffire.attributeslib.util.DummyLootModifier;
 import dev.shadowsoffire.attributeslib.util.FlyingAbility;
 import dev.shadowsoffire.placebo.config.Configuration;
 import io.github.fabricators_of_create.porting_lib.attributes.PortingLibAttributes;
+import io.github.fabricators_of_create.porting_lib.loot.PortingLibLoot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
@@ -79,6 +81,8 @@ public class AttributesLib implements ModInitializer {
                 AttributesLib.reload(false);
             });
         }
+        //This is to prevent potential issues with this registry not being registered properly, will be removed when fixed
+        Registry.register(PortingLibLoot.GLOBAL_LOOT_MODIFIER_SERIALIZERS.get(), new ResourceLocation(MODID, "dummy"), DummyLootModifier.CODEC);
     }
 
     @Environment(EnvType.CLIENT)

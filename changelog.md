@@ -1,5 +1,10 @@
 
 
+## 0.1.0
+* Fix step height attribute being broken
+* Fix crash on world join when loaded without Zenith
+* Fix lang (again)
+
 ## 0.0.7
 * ACTUALLY fix previous issue
 * Fix issue with Cojuring haste jewels

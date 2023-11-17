@@ -12,7 +12,7 @@ public class FlyingAbility {
     public static void init() {
         ServerTickEvents.START_WORLD_TICK.register(world -> {
             for (ServerPlayer player : world.players()) {
-                if (player.getAttributeValue(ALObjects.Attributes.CREATIVE_FLIGHT) == 1) {
+                if (player.getAttributeValue(ALObjects.Attributes.CREATIVE_FLIGHT) > 0) {
                     FLIGHT_ATTRIBUTE.grantTo(player, VanillaAbilities.ALLOW_FLYING);
                 } else {
                     FLIGHT_ATTRIBUTE.revokeFrom(player, VanillaAbilities.ALLOW_FLYING);

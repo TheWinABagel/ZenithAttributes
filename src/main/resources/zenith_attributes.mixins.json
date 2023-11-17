@@ -11,6 +11,7 @@
     "LivingEntityMixin",
     "NearestAttackableTargetGoalMixin",
     "PlayerMixin",
+    "PortLibStepHeightFix",
     "PotionUtilsMixin",
     "ProjectileMixin"
   ],
