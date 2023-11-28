@@ -48,6 +48,7 @@ import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import net.puffish.skillsmod.server.PlayerAttributes;
 import org.jetbrains.annotations.Nullable;
 
 public class AttributesGui implements Renderable, GuiEventListener, NarratableEntry {
@@ -101,9 +102,10 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
     public void refreshData() {
         this.data.clear();
         BuiltInRegistries.ATTRIBUTE.stream().map(this.player::getAttribute).filter(Objects::nonNull).filter(ai -> {
-            if (!hideUnchanged) return true;
             AttributeInfo info = AttributesLib.getAttrInfo(ai.getAttribute());
             if (!info.getShowsInMenu()) return false;
+            if (!hideUnchanged) return true;
+            if (!ai.getAttribute().isClientSyncable()) return false;
             return ai.getBaseValue() != ai.getValue();
         }).forEach(this.data::add);
         this.data.sort(this::compareAttrs);

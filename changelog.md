@@ -1,5 +1,8 @@
 
 
+## 0.1.1
+* Update the config to 
+
 ## 0.1.0
 * Fix step height attribute being broken
 * Fix crash on world join when loaded without Zenith

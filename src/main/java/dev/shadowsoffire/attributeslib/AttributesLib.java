@@ -18,6 +18,7 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
+import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.world.item.enchantment.Enchantment;
@@ -47,7 +48,6 @@ public class AttributesLib implements ModInitializer {
     public static File configDir;
     static Configuration attributeInfoConfig;
     public static final Map<Attribute, AttributeInfo> ATTRIBUTE_INFO = new HashMap<>();
-    public static List<Attribute> playerAttributes;
 
     /**
      * Static record of {@link Player#getAttackStrengthScale(float)} for use in damage events.<br>
@@ -103,10 +103,10 @@ public class AttributesLib implements ModInitializer {
         attributeInfoConfig.setTitle("Zenith Attributes Information");
         attributeInfoConfig.setComment("This file contains configurable data for each attribute.\nThe names of each category correspond to the registry names of every loaded attribute.");
         ATTRIBUTE_INFO.clear();
-        //LOGGER.info(playerAttributes);
-        for (Attribute attribute : playerAttributes) {
+        Player.createAttributes().builder.forEach((attribute, attributeInstance) -> {
             ATTRIBUTE_INFO.put(attribute, AttributeInfo.load(attribute, attributeInfoConfig));
-        }
+        });
+
 
         if (!e && attributeInfoConfig.hasChanged()) attributeInfoConfig.save();
     }
