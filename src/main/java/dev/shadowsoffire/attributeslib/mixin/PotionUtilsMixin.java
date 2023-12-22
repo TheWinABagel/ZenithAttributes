@@ -1,13 +1,6 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
-import java.util.List;
-
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
-
 import com.mojang.datafixers.util.Pair;
-
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.IFormattableAttribute;
 import net.minecraft.ChatFormatting;
@@ -18,6 +11,11 @@ import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Redirect;
+
+import java.util.List;
 
 @Mixin(PotionUtils.class)
 public class PotionUtilsMixin {
@@ -27,7 +25,6 @@ public class PotionUtilsMixin {
      * Target Line: <code>if (!list.isEmpty()) {</code>.
      *
      * @param list           The potion's attribute modifiers.
-     * @param stack          The potion stack.
      * @param tooltips       The tooltip list.
      * @param durationFactor The duration factor of the potion.
      * @return True, unconditionally, so that the vanilla tooltip logic is ignored.

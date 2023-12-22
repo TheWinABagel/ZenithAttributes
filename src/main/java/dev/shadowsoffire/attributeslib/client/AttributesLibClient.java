@@ -1,22 +1,8 @@
 package dev.shadowsoffire.attributeslib.client;
 
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.HashSet;
-import java.util.IdentityHashMap;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Map;
-import java.util.Set;
-import java.util.UUID;
-import java.util.function.Consumer;
-
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Pair;
-
-import dev.architectury.event.events.client.ClientLifecycleEvent;
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
 import dev.shadowsoffire.attributeslib.api.AttributeHelper;
@@ -29,12 +15,8 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
-import net.fabricmc.fabric.api.client.screen.v1.ScreenEvents;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.minecraft.ChatFormatting;
-import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.screens.Screen;
-import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 import net.minecraft.client.particle.CritParticle;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
@@ -45,7 +27,6 @@ import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.contents.LiteralContents;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
-import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -57,6 +38,9 @@ import net.minecraft.world.item.PotionItem;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import org.jetbrains.annotations.Nullable;
+
+import java.util.*;
+import java.util.function.Consumer;
 
 public class AttributesLibClient implements ClientModInitializer {
 
@@ -103,7 +87,7 @@ public class AttributesLibClient implements ClientModInitializer {
 
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"deprecation", "NoTranslation"})
     public void effectGuiTooltips() {
         GatherEffectScreenTooltipsEvent.GATHER_TOOLTIPS.register((e) -> {
             List<Component> tooltips = e.getTooltip();
@@ -179,13 +163,6 @@ public class AttributesLibClient implements ClientModInitializer {
             else AttributesLib.LOGGER.debug("Detected broken attribute modifier entry on item {}.  Attr={}, Modif={}", stack, ent.getKey(), ent.getValue());
         }
         return map;
-    }
-
-    public static void apothCrit(int entityId) {
-        Entity entity = Minecraft.getInstance().level.getEntity(entityId);
-        if (entity != null) {
-            Minecraft.getInstance().particleEngine.createTrackingEmitter(entity, ALObjects.Particles.APOTH_CRIT);
-        }
     }
 
     private static boolean shouldShowInTooltip(int pHideFlags, ItemStack.TooltipPart pPart) {

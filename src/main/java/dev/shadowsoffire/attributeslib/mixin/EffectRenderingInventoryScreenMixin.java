@@ -21,16 +21,17 @@ public class EffectRenderingInventoryScreenMixin {
 
     @Unique private MobEffectInstance mobEffect;
 
+    @SuppressWarnings("InvalidInjectorMethodSignature")
     @ModifyVariable(method = "renderEffects",at = @At(value = "STORE",
             target = "java/util/List.of (Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;"), index = 12)
-    public List<Component> zenithModifyRenderEffects(List<Component> tooltip) {
+    public List<Component> zenith_attributes$ModifyRenderEffects(List<Component> tooltip) {
         var event = new GatherEffectScreenTooltipsEvent.GatherEffectTooltipsEvent((EffectRenderingInventoryScreen) (Object) this, mobEffect, tooltip);
         GatherEffectScreenTooltipsEvent.GATHER_TOOLTIPS.invoker().gatherTooltips(event);
         return event.getTooltip();
     }
 
     @Inject(method = "renderEffects", at = @At(value = "INVOKE", target = "java/util/List.of (Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;", shift = At.Shift.BEFORE),locals = LocalCapture.CAPTURE_FAILHARD)
-    public void zenithCollectMobEffect(GuiGraphics guiGraphics, int mouseX, int mouseY, CallbackInfo ci, int i, int j, Collection collection, boolean bl, int k, Iterable iterable, int l, MobEffectInstance mobEffectInstance) {
+    public void zenith_attributes$CollectMobEffect(GuiGraphics guiGraphics, int mouseX, int mouseY, CallbackInfo ci, int i, int j, Collection collection, boolean bl, int k, Iterable iterable, int l, MobEffectInstance mobEffectInstance) {
     this.mobEffect = mobEffectInstance;
     }
 }

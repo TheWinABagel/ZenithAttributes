@@ -1,20 +1,10 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
-import dev.shadowsoffire.attributeslib.api.*;
+import dev.shadowsoffire.attributeslib.api.ALCombatRules;
+import dev.shadowsoffire.attributeslib.api.ALObjects;
+import dev.shadowsoffire.attributeslib.api.HealEvent;
 import dev.shadowsoffire.attributeslib.impl.AttributeEvents;
-import net.minecraft.util.Mth;
-import net.minecraft.world.entity.ai.attributes.AttributeMap;
-import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
-import org.jetbrains.annotations.Nullable;
-import org.spongepowered.asm.mixin.Final;
-import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Shadow;
-import org.spongepowered.asm.mixin.injection.*;
-
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.effect.MobEffect;
@@ -22,19 +12,32 @@ import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
+import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
+import net.minecraft.world.entity.ai.attributes.Attributes;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.Nullable;
+import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.injection.At;
+import org.spongepowered.asm.mixin.injection.Inject;
+import org.spongepowered.asm.mixin.injection.ModifyVariable;
+import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = LivingEntity.class, priority = 900)
 public abstract class LivingEntityMixin extends Entity {
 
-    @Final
-    @Shadow
-    private AttributeMap attributes;
-
     @Shadow
     protected int useItemRemaining;
+
+    @Shadow
+    public abstract boolean hasEffect(MobEffect ef);
+
+    @Shadow
+    public abstract MobEffectInstance getEffect(MobEffect ef);
 
     public LivingEntityMixin(EntityType<?> pEntityType, Level pLevel) {
         super(pEntityType, pLevel);
@@ -49,7 +52,7 @@ public abstract class LivingEntityMixin extends Entity {
      * @param damage The initial damage amount
      */
     @Redirect(at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
-    public float zenith_sunderingApplyEffect(float value, float max, DamageSource source, float damage) {
+    public float zenith$sunderingApplyEffect(float value, float max, DamageSource source, float damage) {
         if (this.hasEffect(ALObjects.MobEffects.SUNDERING) && !source.is(DamageTypeTags.BYPASSES_RESISTANCE)) {
             int level = this.getEffect(ALObjects.MobEffects.SUNDERING).getAmplifier() + 1;
             value += damage * level * 0.2F;
@@ -62,7 +65,7 @@ public abstract class LivingEntityMixin extends Entity {
      * @reason Used to enter an if-condition so the above mixin always triggers.
      */
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
-    public boolean zenith_sunderingHasEffect(LivingEntity ths, MobEffect effect) {
+    public boolean zenith$sunderingHasEffect(LivingEntity ths, MobEffect effect) {
         return true;
     }
 
@@ -71,15 +74,9 @@ public abstract class LivingEntityMixin extends Entity {
      * @reason Used to prevent an NPE since we're faking true on hasEffect
      */
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffectInstance;getAmplifier()I"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
-    public int zenith_sunderingGetAmplifier(@Nullable MobEffectInstance inst) {
+    public int zenith$sunderingGetAmplifier(@Nullable MobEffectInstance inst) {
         return inst == null ? -1 : inst.getAmplifier();
     }
-
-    @Shadow
-    public abstract boolean hasEffect(MobEffect ef);
-
-    @Shadow
-    public abstract MobEffectInstance getEffect(MobEffect ef);
 
     @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), method = "getDamageAfterArmorAbsorb", require = 1)
     public float zenith_applyArmorPen(float amount, DamageSource src) {
@@ -93,12 +90,12 @@ public abstract class LivingEntityMixin extends Entity {
 
     @ModifyVariable(method = "heal", at = @At(value = "HEAD"), argsOnly = true)
     private float healEvent(float value){
-        float amount = HealEvent.EVENT.invoker().onLivingHeal(this, value);
+        float amount = HealEvent.EVENT.invoker().onLivingHeal((LivingEntity) (Object) this, value);
         return amount >= 0 ? amount : 0;
     }
 
     @Inject(method = "updateUsingItem", at = @At("HEAD"))
-    private void useItemEvent(ItemStack usingItem, CallbackInfo ci){
+    private void useItemEvent(ItemStack usingItem, CallbackInfo ci) {
         if (!usingItem.isEmpty())
             this.useItemRemaining = AttributeEvents.drawSpeed((LivingEntity) (Object) this, usingItem, this.useItemRemaining);
     }

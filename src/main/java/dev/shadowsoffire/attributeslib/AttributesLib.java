@@ -1,11 +1,9 @@
 package dev.shadowsoffire.attributeslib;
 
-import java.io.File;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
-
+import dev.shadowsoffire.attributeslib.api.ALObjects;
+import dev.shadowsoffire.attributeslib.compat.TrinketsCompat;
+import dev.shadowsoffire.attributeslib.impl.AttributeEvents;
+import dev.shadowsoffire.attributeslib.mixin.accessors.AttributeSupplierBuilderAccessor;
 import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
 import dev.shadowsoffire.attributeslib.util.AttributeInfo;
 import dev.shadowsoffire.attributeslib.util.DummyLootModifier;
@@ -18,17 +16,9 @@ import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
 import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
-import net.minecraft.client.resources.language.I18n;
+import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.world.item.enchantment.Enchantment;
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
-import dev.shadowsoffire.attributeslib.api.ALObjects;
-import dev.shadowsoffire.attributeslib.compat.TrinketsCompat;
-import dev.shadowsoffire.attributeslib.impl.AttributeEvents;
-import net.minecraft.client.Minecraft;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.EntityType;
@@ -39,6 +29,12 @@ import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.TooltipFlag;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
+import java.io.File;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class AttributesLib implements ModInitializer {
@@ -103,7 +99,7 @@ public class AttributesLib implements ModInitializer {
         attributeInfoConfig.setTitle("Zenith Attributes Information");
         attributeInfoConfig.setComment("This file contains configurable data for each attribute.\nThe names of each category correspond to the registry names of every loaded attribute.");
         ATTRIBUTE_INFO.clear();
-        Player.createAttributes().builder.forEach((attribute, attributeInstance) -> {
+        ((AttributeSupplierBuilderAccessor) Player.createAttributes()).getBuilder().forEach((attribute, attributeInstance) -> {
             ATTRIBUTE_INFO.put(attribute, AttributeInfo.load(attribute, attributeInfoConfig));
         });
 

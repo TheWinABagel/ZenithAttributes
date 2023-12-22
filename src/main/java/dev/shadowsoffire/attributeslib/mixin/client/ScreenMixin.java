@@ -12,7 +12,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
@@ -20,7 +19,7 @@ public abstract class ScreenMixin {
     @Unique private boolean hasLoaded = false;
 
     @Inject(method = "rebuildWidgets", at = @At(value = "TAIL"), cancellable = true)
-    private void postInit(CallbackInfo ci) {
+    private void zenith_attributes$postRebuildWidgets(CallbackInfo ci) {
         if ((Screen) (Object) this instanceof InventoryScreen scn){
             var atrComp = new AttributesGui(scn);
             this.addRenderableWidget(atrComp);
@@ -33,7 +32,7 @@ public abstract class ScreenMixin {
     }
 
         @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screens/Screen.init ()V", shift = At.Shift.AFTER), cancellable = true)
-        private void postInit(Minecraft minecraft, int width, int height, CallbackInfo ci) {
+        private void zenith_attributes$postInit(Minecraft minecraft, int width, int height, CallbackInfo ci) {
             if ((Screen) (Object) this instanceof InventoryScreen scn){
                 var atrComp = new AttributesGui(scn);
                 this.addRenderableWidget(atrComp);
@@ -46,7 +45,7 @@ public abstract class ScreenMixin {
         }
 
     @Inject(method = "init()V", at = @At("HEAD"))
-    private void insertScreen(CallbackInfo ci){
+    private void zenith_attributes$insertScreen(CallbackInfo ci){
         if ((Screen) (Object) this instanceof InventoryScreen scn && !hasLoaded){
             var atrComp = new AttributesGui(scn);
             this.addRenderableWidget(atrComp);

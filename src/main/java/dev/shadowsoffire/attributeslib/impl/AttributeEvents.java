@@ -1,8 +1,5 @@
 package dev.shadowsoffire.attributeslib.impl;
 
-import java.util.Objects;
-import java.util.Random;
-
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import de.dafuqs.additionalentityattributes.Support;
@@ -16,12 +13,10 @@ import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEn
 import io.github.fabricators_of_create.porting_lib.entity.events.player.PlayerEvents;
 import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.entity.event.v1.FabricElytraItem;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraft.sounds.SoundSource;
-import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.util.Mth;
 import net.minecraft.util.RandomSource;
 import net.minecraft.world.damagesource.DamageSource;
@@ -31,7 +26,6 @@ import net.minecraft.world.effect.MobEffects;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EquipmentSlot;
 import net.minecraft.world.entity.LivingEntity;
-import net.minecraft.world.entity.ai.attributes.AttributeInstance;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier.Operation;
 import net.minecraft.world.entity.ai.attributes.Attributes;
@@ -41,11 +35,11 @@ import net.minecraft.world.item.ElytraItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.ProjectileWeaponItem;
 import net.minecraft.world.item.TridentItem;
-import net.minecraft.world.level.GameType;
 import net.minecraft.world.phys.EntityHitResult;
-import net.puffish.skillsmod.access.EntityAttributeInstanceAccess;
-import net.puffish.skillsmod.server.PlayerAttributes;
 import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
+
+import java.util.Objects;
+import java.util.Random;
 
 public class AttributeEvents {
 
@@ -213,8 +207,8 @@ public class AttributeEvents {
 
             e.damageAmount *= critMult;
 
-            if (critMult > 1 && !attacker.level().isClientSide) {
-                CritParticleMessage.sendTo(e.damaged.getId());
+            if (critMult > 1 && !attacker.level().isClientSide && attacker instanceof Player player) {
+                CritParticleMessage.sendTo(e.damaged.getId(), player);
             }
         });
 

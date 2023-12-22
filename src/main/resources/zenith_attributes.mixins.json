@@ -3,7 +3,6 @@
   "package": "dev.shadowsoffire.attributeslib.mixin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
-    "AttributeInstanceAccessor",
     "AttributeMixin",
     "CombatRulesMixin",
     "ItemStackMixin",
@@ -12,7 +11,10 @@
     "PlayerMixin",
     "PortLibStepHeightFix",
     "PotionUtilsMixin",
-    "ProjectileMixin"
+    "ProjectileMixin",
+    "accessors.AbstractContainerScreenAccessor",
+    "accessors.AttributeSupplierBuilderAccessor",
+    "accessors.GuiGraphicsAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
@@ -20,7 +22,6 @@
   "client": [
     "EffectRenderingInventoryScreenMixin",
     "client.AbstractContainerScreenMixin",
-    "client.ClientPacketListenerMixin",
     "client.ScreenMixin"
   ]
 }

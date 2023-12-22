@@ -1,19 +1,11 @@
 package dev.shadowsoffire.attributeslib.client;
 
-import java.text.DecimalFormat;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
-
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
-
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.IFormattableAttribute;
+import dev.shadowsoffire.attributeslib.mixin.accessors.AbstractContainerScreenAccessor;
+import dev.shadowsoffire.attributeslib.mixin.accessors.GuiGraphicsAccessor;
 import dev.shadowsoffire.attributeslib.util.AttributeInfo;
 import dev.shadowsoffire.placebo.PlaceboClient;
 import net.minecraft.ChatFormatting;
@@ -32,11 +24,7 @@ import net.minecraft.client.renderer.GameRenderer;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
 import net.minecraft.locale.Language;
-import net.minecraft.network.chat.CommonComponents;
-import net.minecraft.network.chat.Component;
-import net.minecraft.network.chat.FormattedText;
-import net.minecraft.network.chat.MutableComponent;
-import net.minecraft.network.chat.Style;
+import net.minecraft.network.chat.*;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.util.FormattedCharSequence;
 import net.minecraft.util.Mth;
@@ -48,8 +36,10 @@ import net.minecraft.world.entity.ai.attributes.RangedAttribute;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
-import net.puffish.skillsmod.server.PlayerAttributes;
 import org.jetbrains.annotations.Nullable;
+
+import java.text.DecimalFormat;
+import java.util.*;
 
 public class AttributesGui implements Renderable, GuiEventListener, NarratableEntry {
 
@@ -86,9 +76,9 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
         this.parent = parent;
         this.player = Minecraft.getInstance().player;
         this.refreshData();
-        this.leftPos = parent.leftPos - WIDTH;
-        this.topPos = parent.topPos;
-        this.toggleBtn = new ImageButton(parent.leftPos + 63, parent.topPos + 10, 10, 10, WIDTH, 0, 10, TEXTURES, 256, 256, btn -> {
+        this.leftPos = ((AbstractContainerScreenAccessor) parent).getLeftPos() - WIDTH;
+        this.topPos = ((AbstractContainerScreenAccessor) parent).getTopPos();
+        this.toggleBtn = new ImageButton(((AbstractContainerScreenAccessor) parent).getLeftPos() + 63, ((AbstractContainerScreenAccessor) parent).getTopPos() + 10, 10, 10, WIDTH, 0, 10, TEXTURES, 256, 256, btn -> {
             this.toggleVisibility();
         }, Component.translatable("zenith_attributes.gui.show_attributes"));
         if (this.parent.children().size() > 1) {
@@ -121,17 +111,17 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
 
         int newLeftPos;
         if (this.open && this.parent.width >= 379) {
-            newLeftPos = 177 + (this.parent.width - this.parent.imageWidth - 200) / 2;
+            newLeftPos = 177 + (this.parent.width - ((AbstractContainerScreenAccessor) this.parent).getImageWidth() - 200) / 2;
         }
         else {
-            newLeftPos = (this.parent.width - this.parent.imageWidth) / 2;
+            newLeftPos = (this.parent.width - ((AbstractContainerScreenAccessor) this.parent).getImageWidth()) / 2;
         }
 
-        this.parent.leftPos = newLeftPos;
-        this.leftPos = this.parent.leftPos - WIDTH;
-        this.topPos = this.parent.topPos;
+        ((AbstractContainerScreenAccessor) this.parent).setLeftPos(newLeftPos);
+        this.leftPos = ((AbstractContainerScreenAccessor) this.parent).getLeftPos() - WIDTH;
+        this.topPos = ((AbstractContainerScreenAccessor) this.parent).getTopPos();
 
-        if (this.recipeBookButton != null) this.recipeBookButton.setPosition(this.parent.leftPos + 104, this.parent.height / 2 - 22);
+        if (this.recipeBookButton != null) this.recipeBookButton.setPosition(((AbstractContainerScreenAccessor) this.parent).getLeftPos() + 104, this.parent.height / 2 - 22);
         this.hideUnchangedBtn.setPosition(this.leftPos + 7, this.topPos + 151);
     }
 
@@ -149,8 +139,8 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
 
     @Override
     public void render(GuiGraphics gfx, int mouseX, int mouseY, float partialTicks) {
-        this.toggleBtn.setX(this.parent.leftPos + 63);
-        this.toggleBtn.setY(this.parent.topPos + 10);
+        this.toggleBtn.setX(((AbstractContainerScreenAccessor) this.parent).getLeftPos() + 63);
+        this.toggleBtn.setY(((AbstractContainerScreenAccessor) this.parent).getTopPos() + 10);
         if (this.parent.getRecipeBookComponent().isVisible()) this.open = false;
         wasOpen = this.open;
         if (!this.open) return;
@@ -178,7 +168,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
         gfx.drawString(font, Component.literal("Hide Unchanged"), this.leftPos + 20, this.topPos + 152, 0x404040, false);
     }
 
-    @SuppressWarnings("deprecation")
+    @SuppressWarnings({"NoTranslation"})
     protected void renderTooltip(GuiGraphics gfx, int mouseX, int mouseY) {
         AttributeInstance inst = this.getHoveredSlot(mouseX, mouseY);
         if (inst != null) {
@@ -287,7 +277,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
                 }
             }
 
-            gfx.renderTooltipInternal(font, finalTooltip, this.leftPos - 16 - finalTooltip.stream().map(c -> c.getWidth(this.font)).max(Integer::compare).get(), mouseY, DefaultTooltipPositioner.INSTANCE);
+            ((GuiGraphicsAccessor) gfx).callRenderTooltipInternal(font, finalTooltip, this.leftPos - 16 - finalTooltip.stream().map(c -> c.getWidth(this.font)).max(Integer::compare).get(), mouseY, DefaultTooltipPositioner.INSTANCE);
         }
     }
 
