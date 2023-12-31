@@ -6,7 +6,7 @@ import org.apache.logging.log4j.Logger;
 
 import java.util.List;
 
-public class StepHeightMixinCanceller implements MixinCanceller {
+public class ZenithAttributesMixinCanceller implements MixinCanceller {
 
     public static final Logger LOGGER = LogManager.getLogger("Zenith Attributes : Mixin Canceller");
     @Override

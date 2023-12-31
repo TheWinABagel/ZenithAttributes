@@ -1,18 +1,23 @@
 package dev.shadowsoffire.attributeslib.impl;
 
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
+import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import de.dafuqs.additionalentityattributes.Support;
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.*;
+import dev.shadowsoffire.attributeslib.commands.ModifierCommand;
 import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
 import dev.shadowsoffire.attributeslib.util.AttributesUtil;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEntityDamageEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEntityLootEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.player.PlayerEvents;
+import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.entity.event.v1.FabricElytraItem;
+import net.minecraft.commands.CommandSourceStack;
+import net.minecraft.commands.Commands;
 import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.resources.ResourceKey;
 import net.minecraft.server.level.ServerLevel;
@@ -59,6 +64,7 @@ public class AttributeEvents {
         dodgeProjectile();
         affixModifiers();
         //trackCooldown();
+        commands();
         ModCompat.init();
     }
 
@@ -67,7 +73,7 @@ public class AttributeEvents {
      */
     public static void elytra() {
         EntityElytraEvents.CUSTOM.register((entity, tickElytra) -> {
-            if (entity instanceof Player p){
+            if (entity instanceof Player p) {
                 return p.getAttributeValue(ALObjects.Attributes.ELYTRA_FLIGHT) > 0;
             }
             return false;
@@ -82,7 +88,7 @@ public class AttributeEvents {
      */
     public static int drawSpeed(Entity entity, ItemStack usingItem, int useItemRemaining) {
             if (entity instanceof Player player) {
-                double t = player.getAttribute(ALObjects.Attributes.DRAW_SPEED).getValue() - 1;
+                double t = player.getAttributeValue(ALObjects.Attributes.DRAW_SPEED) - 1;
                 if (t == 0 || !canBenefitFromDrawSpeed(usingItem)) return useItemRemaining;
 
                 // Handle negative draw speed.
@@ -338,6 +344,14 @@ public class AttributeEvents {
             if (e.slot == EquipmentSlot.CHEST && (e.stack.getItem() instanceof FabricElytraItem || e.stack.getItem() instanceof ElytraItem) && !e.nonChangableModifiers.containsKey(ALObjects.Attributes.ELYTRA_FLIGHT)) {
                 e.addModifier(ALObjects.Attributes.ELYTRA_FLIGHT, new AttributeModifier(AttributeHelper.ELYTRA_FLIGHT_UUID, () -> "zenith_attributes:elytra_item_flight", 1, Operation.ADDITION));
             }
+        });
+    }
+
+    public static void commands() {
+        CommandRegistrationCallback.EVENT.register((dispatcher, registryAccess, environment) -> {
+            LiteralArgumentBuilder<CommandSourceStack> root = Commands.literal("zenith_attributes");
+            ModifierCommand.register(root);
+            dispatcher.register(root);
         });
     }
 

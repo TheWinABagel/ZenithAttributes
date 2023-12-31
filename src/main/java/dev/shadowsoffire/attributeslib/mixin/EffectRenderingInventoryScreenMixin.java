@@ -1,37 +1,25 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
+import com.llamalad7.mixinextras.sugar.Local;
 import dev.shadowsoffire.attributeslib.api.client.GatherEffectScreenTooltipsEvent;
-import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.effect.MobEffectInstance;
 import org.spongepowered.asm.mixin.Mixin;
-import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Inject;
-import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
-import org.spongepowered.asm.mixin.injection.callback.LocalCapture;
+import org.spongepowered.asm.mixin.injection.ModifyArgs;
+import org.spongepowered.asm.mixin.injection.invoke.arg.Args;
 
-import java.util.Collection;
 import java.util.List;
 
-@Mixin(value = EffectRenderingInventoryScreen.class, priority = 500)
+@Mixin(value = EffectRenderingInventoryScreen.class, priority = 300)
 public class EffectRenderingInventoryScreenMixin {
 
-    @Unique private MobEffectInstance mobEffect;
-
-    @SuppressWarnings("InvalidInjectorMethodSignature")
-    @ModifyVariable(method = "renderEffects",at = @At(value = "STORE",
-            target = "java/util/List.of (Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;"), index = 12)
-    public List<Component> zenith_attributes$ModifyRenderEffects(List<Component> tooltip) {
-        var event = new GatherEffectScreenTooltipsEvent.GatherEffectTooltipsEvent((EffectRenderingInventoryScreen) (Object) this, mobEffect, tooltip);
+    @ModifyArgs(method = "renderEffects", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/GuiGraphics.renderTooltip (Lnet/minecraft/client/gui/Font;Ljava/util/List;Ljava/util/Optional;II)V"))
+    public void zenith_attributes$ModifyRenderEffectsArgs(Args args, @Local MobEffectInstance mob_effect) {
+        List<Component> tooltipList = args.get(1);
+        var event = new GatherEffectScreenTooltipsEvent.GatherEffectTooltipsEvent((EffectRenderingInventoryScreen<?>) (Object) this, mob_effect, tooltipList);
         GatherEffectScreenTooltipsEvent.GATHER_TOOLTIPS.invoker().gatherTooltips(event);
-        return event.getTooltip();
-    }
-
-    @Inject(method = "renderEffects", at = @At(value = "INVOKE", target = "java/util/List.of (Ljava/lang/Object;Ljava/lang/Object;)Ljava/util/List;", shift = At.Shift.BEFORE),locals = LocalCapture.CAPTURE_FAILHARD)
-    public void zenith_attributes$CollectMobEffect(GuiGraphics guiGraphics, int mouseX, int mouseY, CallbackInfo ci, int i, int j, Collection collection, boolean bl, int k, Iterable iterable, int l, MobEffectInstance mobEffectInstance) {
-    this.mobEffect = mobEffectInstance;
+        args.set(1, tooltipList);
     }
 }

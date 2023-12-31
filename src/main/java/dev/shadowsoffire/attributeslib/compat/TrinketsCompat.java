@@ -23,8 +23,8 @@ public class TrinketsCompat {
         }
     }
 
-    public static void init() { //TODO add
-        ModifierSourceType.register(new ModifierSourceType<>(){
+    public static void init() {
+        ModifierSourceType.register(new ModifierSourceType<>() {
 
             @Override
             public void extract(LivingEntity entity, BiConsumer<AttributeModifier, ModifierSource<?>> map) {

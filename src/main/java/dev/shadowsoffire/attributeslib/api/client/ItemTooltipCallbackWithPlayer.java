@@ -1,12 +1,14 @@
 package dev.shadowsoffire.attributeslib.api.client;
 
-import java.util.List;
 import net.fabricmc.fabric.api.event.Event;
 import net.fabricmc.fabric.api.event.EventFactory;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.List;
 
 public interface ItemTooltipCallbackWithPlayer {
 
@@ -16,5 +18,5 @@ public interface ItemTooltipCallbackWithPlayer {
         }
     });
 
-    void getTooltip(ItemStack stack, TooltipFlag context, List<Component> lines, Player player);
+    void getTooltip(ItemStack stack, TooltipFlag context, List<Component> lines, @Nullable Player player);
 }

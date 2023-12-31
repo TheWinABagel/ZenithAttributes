@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 public class PlayerMixin {
 
     @Inject(method = "attack", at = @At("HEAD"))
-    private void setLocalAtkStrength(Entity target, CallbackInfo ci){
+    private void zenith_attributes$setLocalAtkStrength(Entity target, CallbackInfo ci) {
         AttributesLib.localAtkStrength = ((Player) (Object) this).getAttackStrengthScale(.5F);
     }
 

@@ -6,7 +6,6 @@ import net.fabricmc.fabric.api.networking.v1.PacketByteBufs;
 import net.fabricmc.fabric.api.networking.v1.ServerPlayNetworking;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
-import net.minecraft.network.chat.Component;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
@@ -30,11 +29,11 @@ public class CritParticleMessage {
     public static void sendTo(int id, Player player) {
         FriendlyByteBuf buf = PacketByteBufs.create();
         buf.writeInt(id);
-        player.displayClientMessage(Component.literal("critting"), false);
         ServerPlayNetworking.send((ServerPlayer) player, ID, buf);
     }
 
     public static void apothCrit(int entityId) {
+        if (Minecraft.getInstance().level == null) return;
         Entity entity = Minecraft.getInstance().level.getEntity(entityId);
         if (entity != null) {
             Minecraft.getInstance().particleEngine.createTrackingEmitter(entity, ALObjects.Particles.APOTH_CRIT);

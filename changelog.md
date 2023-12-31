@@ -2,7 +2,7 @@
 
 ## 0.1.2
 * Added trinkets support, so trinkets will show in the attributes screen
-* 
+* Fix crit particle crash on dedicated servers
 
 ## 0.1.1
 * Update the config to be less horrible

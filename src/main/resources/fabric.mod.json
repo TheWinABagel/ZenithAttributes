@@ -22,7 +22,7 @@
 			"dev.shadowsoffire.attributeslib.client.AttributesLibClient"
 		],
 		"mixinsquared": [
-			"dev.shadowsoffire.attributeslib.mixin.StepHeightMixinCanceller"
+			"dev.shadowsoffire.attributeslib.mixin.ZenithAttributesMixinCanceller"
 		]
 	},
 	"mixins": [

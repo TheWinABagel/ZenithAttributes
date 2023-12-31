@@ -47,7 +47,7 @@ public class AttributesLib implements ModInitializer {
 
     /**
      * Static record of {@link Player#getAttackStrengthScale(float)} for use in damage events.<br>
-     * Recorded in the {link PlayerAttackEvent} and valid for the entire chain, when a player attacks.
+     * Obtained from {@link dev.shadowsoffire.attributeslib.mixin.PlayerMixin} and valid for the entire chain, when a player attacks.
      */
     public static float localAtkStrength = 1;
 
