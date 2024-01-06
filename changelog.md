@@ -1,5 +1,8 @@
 
 
+## 0.1.3
+* Fix pufferfish skills compat crashing on newer versions
+
 ## 0.1.2
 * Added trinkets support, so trinkets will show in the attributes screen
 * Fix crit particle crash on dedicated servers

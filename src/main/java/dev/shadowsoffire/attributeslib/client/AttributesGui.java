@@ -216,7 +216,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
                 Component min = fAttr.toValueComponent(null, ra.getMinValue(), AttributesLib.getTooltipFlag());
                 min = Component.translatable("zenith_attributes.gui.min", min);
                 double maxValue = ra.getMaxValue();
-                if (maxValue > 4096D) maxValue = 4096D; // to stop Double.MAXVALUE madness
+                if (maxValue == Double.MAX_VALUE) maxValue = 8192D; // to stop Double.MAXVALUE madness
                 Component max = fAttr.toValueComponent(null, maxValue, AttributesLib.getTooltipFlag());
 
                 max = Component.translatable("zenith_attributes.gui.max", max);
@@ -335,7 +335,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
         }
 
         int color = 0xFFFFFF;
-        if (attr instanceof RangedAttribute ra) {
+        if (attr instanceof RangedAttribute) {
             if (inst.getValue() > inst.getBaseValue()) {
                 color = 0x55DD55;
             }

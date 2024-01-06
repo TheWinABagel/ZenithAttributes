@@ -123,7 +123,7 @@ dependencies {
 	//modImplementation "maven.modrinth:obscure-api:16"
 	//modImplementation "maven.modrinth:aquamirae:ouUaC54p"
 
-	modImplementation "curse.maven:puffish-skills-835091:4809638"
+	modImplementation "curse.maven:puffish-skills-835091:5007321"
 
 	modImplementation "curse.maven:iceberg-fabric-539382:4953470"
 	modImplementation "curse.maven:equipment-compare-fabric-541329:4940609"

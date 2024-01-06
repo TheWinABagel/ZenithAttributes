@@ -137,7 +137,7 @@ public class AttributeEvents {
     }
 
     /**
-     * Recursion guard for {link #meleeDamageAttributes(LivingAttackEvent)}.<br>
+     * Recursion guard for {@link #meleeDamageAttributes()}.<br>
      * Doesn't need to be ThreadLocal as attack logic is main-thread only.
      */
     private static boolean noRecurse = false;
