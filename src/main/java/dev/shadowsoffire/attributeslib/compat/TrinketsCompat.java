@@ -1,8 +1,8 @@
 package dev.shadowsoffire.attributeslib.compat;
 
-import dev.emi.trinkets.api.SlotReference;
-import dev.emi.trinkets.api.TrinketItem;
-import dev.emi.trinkets.api.TrinketsApi;
+import com.google.common.collect.Multimap;
+import dev.emi.trinkets.api.*;
+import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.client.ModifierSource;
 import dev.shadowsoffire.attributeslib.client.ModifierSourceType;
 import net.fabricmc.loader.api.FabricLoader;
@@ -36,8 +36,8 @@ public class TrinketsCompat {
                                 ItemStack stack = trinketInventory.getItem(i);
                                 if (!stack.isEmpty() && stack.getItem() instanceof TrinketItem trinket) {
                                     SlotReference ref = new SlotReference(trinketInventory, i);
-                                    UUID uuid = UUID.nameUUIDFromBytes((slotId + i).getBytes());
-                                    com.google.common.collect.Multimap<Attribute, AttributeModifier> modifiers = trinket.getModifiers(stack, ref, entity, uuid);
+                                    UUID uuid = SlotAttributes.getUuid(ref);
+                                    Multimap<Attribute, AttributeModifier> modifiers = trinket.getModifiers(stack, ref, entity, uuid);
                                     ModifierSource<?> src = new ModifierSource.ItemModifierSource(stack);
                                     modifiers.values().forEach(m -> map.accept(m, src));
                                 }

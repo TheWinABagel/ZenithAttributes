@@ -8,8 +8,8 @@ import net.minecraft.server.level.ServerPlayer;
 
 public class FlyingAbility {
 
-    public static final AbilitySource FLIGHT_ATTRIBUTE = Pal.getAbilitySource(AttributesLib.loc("flight_attribute"));
-    public static void init() {
+    public static final AbilitySource FLIGHT_ATTRIBUTE = Pal.getAbilitySource(AttributesLib.loc("flight_attribute"), AbilitySource.FREE);
+    public static void initZenithFlyingAbility() {
         ServerTickEvents.START_WORLD_TICK.register(world -> {
             for (ServerPlayer player : world.players()) {
                 if (player.getAttributeValue(ALObjects.Attributes.CREATIVE_FLIGHT) > 0) {

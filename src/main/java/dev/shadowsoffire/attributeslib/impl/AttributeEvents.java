@@ -242,7 +242,6 @@ public class AttributeEvents {
             float factor = (float) player.getAttributeValue(ALObjects.Attributes.HEALING_RECEIVED);
             return (amount * factor);
         });
-
     }
 
     /**
