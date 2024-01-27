@@ -1,5 +1,8 @@
 
 
+## 0.1.4
+* Fix trinkets compat to actually function
+
 ## 0.1.3
 * Fix pufferfish skills compat crashing on newer versions
 
