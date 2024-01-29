@@ -1,5 +1,8 @@
 
 
+## 0.1.5
+* Fix crash on launch
+
 ## 0.1.4
 * Fix trinkets compat to actually function
 
