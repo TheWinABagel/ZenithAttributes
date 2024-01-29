@@ -7,7 +7,6 @@ import dev.shadowsoffire.attributeslib.mixin.accessors.AttributeSupplierBuilderA
 import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
 import dev.shadowsoffire.attributeslib.util.AttributeInfo;
 import dev.shadowsoffire.attributeslib.util.DummyLootModifier;
-import dev.shadowsoffire.attributeslib.util.DummyTrinket;
 import dev.shadowsoffire.attributeslib.util.FlyingAbility;
 import dev.shadowsoffire.placebo.config.Configuration;
 import io.github.fabricators_of_create.porting_lib.attributes.PortingLibAttributes;
@@ -47,8 +46,6 @@ public class AttributesLib implements ModInitializer {
     static Configuration attributeInfoConfig;
     public static final Map<Attribute, AttributeInfo> ATTRIBUTE_INFO = new HashMap<>();
 
-    public static final DummyTrinket DUMMY_TRINKET_ITEM = new DummyTrinket(new Item.Properties().stacksTo(1));
-
     /**
      * Static record of {@link Player#getAttackStrengthScale(float)} for use in damage events.<br>
      * Obtained from {@link dev.shadowsoffire.attributeslib.mixin.PlayerMixin} and valid for the entire chain, when a player attacks.
@@ -83,9 +80,6 @@ public class AttributesLib implements ModInitializer {
         }
         //This is to prevent potential issues with this registry not being registered properly, will be removed when fixed
         Registry.register(PortingLibLoot.GLOBAL_LOOT_MODIFIER_SERIALIZERS.get(), new ResourceLocation(MODID, "dummy"), DummyLootModifier.CODEC);
-        if (FabricLoader.getInstance().isDevelopmentEnvironment()){
-            Registry.register(BuiltInRegistries.ITEM, loc("dummy_trinket_item"), DUMMY_TRINKET_ITEM);
-        }
     }
 
     @Environment(EnvType.CLIENT)
