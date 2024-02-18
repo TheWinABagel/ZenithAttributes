@@ -10,9 +10,8 @@ import dev.shadowsoffire.attributeslib.commands.ModifierCommand;
 import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
 import dev.shadowsoffire.attributeslib.util.AttributesUtil;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
-import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEntityDamageEvents;
-import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEntityLootEvents;
-import io.github.fabricators_of_create.porting_lib.entity.events.player.PlayerEvents;
+import io.github.fabricators_of_create.porting_lib.entity.events.LivingEntityEvents;
+import io.github.fabricators_of_create.porting_lib.entity.events.PlayerEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.entity.event.v1.FabricElytraItem;
@@ -119,10 +118,10 @@ public class AttributeEvents {
      * This event handler manages the Life Steal and Overheal attributes.
      */
     public static void lifeStealOverheal() {
-        LivingEntityDamageEvents.HURT.register(e -> {
-            if (e.damageSource.getDirectEntity() instanceof LivingEntity attacker && AttributesUtil.isPhysicalDamage(e.damageSource)) {
+        LivingEntityEvents.HURT.register((source, damaged, amount) -> {
+            if (source.getDirectEntity() instanceof LivingEntity attacker && AttributesUtil.isPhysicalDamage(source)) {
                 float lifesteal = (float) attacker.getAttributeValue(ALObjects.Attributes.LIFE_STEAL);
-                float dmg = Math.min(e.damageAmount, attacker.getHealth());
+                float dmg = Math.min(amount, attacker.getHealth());
                 if (lifesteal > 0.001) {
                     attacker.heal(dmg * lifesteal);
                 }
@@ -132,6 +131,7 @@ public class AttributeEvents {
                     attacker.setAbsorptionAmount(Math.min(maxOverheal, attacker.getAbsorptionAmount() + dmg * overheal));
                 }
             }
+            return amount;
         });
 
     }
@@ -152,34 +152,35 @@ public class AttributeEvents {
      */
 
     public static void meleeDamageAttributes() {
-        LivingEntityDamageEvents.HURT.register(e -> {
-            if (e.damaged.level().isClientSide) return;
-            if (noRecurse) return;
+        LivingEntityEvents.HURT.register((source, damaged, amount) -> {
+            if (damaged.level().isClientSide) return amount;
+            if (noRecurse) return amount;
             noRecurse = true;
-            if (e.damageSource.getDirectEntity() instanceof LivingEntity attacker && AttributesUtil.isPhysicalDamage(e.damageSource)) {
+            if (source.getDirectEntity() instanceof LivingEntity attacker && AttributesUtil.isPhysicalDamage(source)) {
                 float hpDmg = (float) attacker.getAttributeValue(ALObjects.Attributes.CURRENT_HP_DAMAGE);
                 float fireDmg = (float) attacker.getAttributeValue(ALObjects.Attributes.FIRE_DAMAGE);
                 float coldDmg = (float) attacker.getAttributeValue(ALObjects.Attributes.COLD_DAMAGE);
-                LivingEntity target = e.damaged;
-                int time = target.invulnerableTime;
-                target.invulnerableTime = 0;
+                int time = damaged.invulnerableTime;
+                damaged.invulnerableTime = 0;
                 if (hpDmg > 0.001 && AttributesLib.localAtkStrength >= 0.85F) {
-                    target.hurt(src(ALObjects.DamageTypes.CURRENT_HP_DAMAGE, attacker), AttributesLib.localAtkStrength * hpDmg * target.getHealth());
+                    damaged.hurt(src(ALObjects.DamageTypes.CURRENT_HP_DAMAGE, attacker), AttributesLib.localAtkStrength * hpDmg * damaged.getHealth());
                 }
-                target.invulnerableTime = 0;
+                damaged.invulnerableTime = 0;
                 if (fireDmg > 0.001 && AttributesLib.localAtkStrength >= 0.55F) {
-                    target.hurt(src(ALObjects.DamageTypes.FIRE_DAMAGE, attacker), AttributesLib.localAtkStrength * fireDmg);
-                    target.setRemainingFireTicks(target.getRemainingFireTicks() + (int) (10 * fireDmg));
+                    damaged.hurt(src(ALObjects.DamageTypes.FIRE_DAMAGE, attacker), AttributesLib.localAtkStrength * fireDmg);
+                    damaged.setRemainingFireTicks(damaged.getRemainingFireTicks() + (int) (10 * fireDmg));
                 }
-                target.invulnerableTime = 0;
+                damaged.invulnerableTime = 0;
                 if (coldDmg > 0.001 && AttributesLib.localAtkStrength >= 0.55F) {
-                    target.hurt(src(ALObjects.DamageTypes.COLD_DAMAGE, attacker), AttributesLib.localAtkStrength * coldDmg);
-                    target.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, (int) (15 * coldDmg), Mth.floor(coldDmg / 5)));
+                    damaged.hurt(src(ALObjects.DamageTypes.COLD_DAMAGE, attacker), AttributesLib.localAtkStrength * coldDmg);
+                    damaged.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, (int) (15 * coldDmg), Mth.floor(coldDmg / 5)));
                 }
-                target.invulnerableTime = time;
+                damaged.invulnerableTime = time;
             }
             noRecurse = false;
+            return amount;
         });
+
 
     }
 
@@ -192,14 +193,14 @@ public class AttributeEvents {
      */
 
     public static void apothCriticalStrike() {
-        LivingEntityDamageEvents.HURT.register(e -> {
-            LivingEntity attacker = e.damageSource.getEntity() instanceof LivingEntity le ? le : null;
-            if (attacker == null) return;
+        LivingEntityEvents.HURT.register((source, damaged, amount) -> {
+            LivingEntity attacker = source.getEntity() instanceof LivingEntity le ? le : null;
+            if (attacker == null) return amount;
 
             double critChance = attacker.getAttributeValue(ALObjects.Attributes.CRIT_CHANCE);
             float critDmg = (float) attacker.getAttributeValue(AdditionalEntityAttributes.CRITICAL_BONUS_DAMAGE);
 
-            RandomSource rand = e.damaged.getRandom();
+            RandomSource rand = damaged.getRandom();
 
             float critMult = 1.0F;
 
@@ -211,11 +212,12 @@ public class AttributeEvents {
                 critDmg *= 0.85F;
             }
 
-            e.damageAmount *= critMult;
+            amount *= critMult;
 
             if (critMult > 1 && !attacker.level().isClientSide && attacker instanceof Player player) {
-                CritParticleMessage.sendTo(e.damaged.getId(), player);
+                CritParticleMessage.sendTo(damaged.getId(), player);
             }
+            return amount;
         });
 
     }
@@ -225,11 +227,13 @@ public class AttributeEvents {
      */
 
     public static void breakSpd() {
-        PlayerEvents.BREAK_SPEED.register((player, state, pos, speed) -> (speed * (float) player.getAttributeValue(ALObjects.Attributes.MINING_SPEED)));
+        PlayerEvents.BREAK_SPEED.register(event -> {
+            event.setNewSpeed(event.getOriginalSpeed() * (float) event.getPlayer().getAttributeValue(ALObjects.Attributes.MINING_SPEED));
+        });
     }
 
     public static void mobXp() {
-        LivingEntityLootEvents.EXPERIENCE_DROP.register((i, attackingPlayer, entity) -> (int) (Support.getExperienceMod(attackingPlayer) * i));
+        LivingEntityEvents.EXPERIENCE_DROP.register((i, attackingPlayer, entity) -> (int) (Support.getExperienceMod(attackingPlayer) * i));
     }
 
     /**
@@ -274,20 +278,20 @@ public class AttributeEvents {
      * Handles {link ALObjects#DODGE_CHANCE} for melee attacks.
      */
     public static void dodgeMelee() {
-        LivingEntityDamageEvents.HURT.register(e -> {
-            LivingEntity target = e.damaged;
-            if (target.level().isClientSide) return;
-            Entity attacker = e.damageSource.getDirectEntity();
+        LivingEntityEvents.HURT.register((source, damaged, amount) -> {
+            if (damaged.level().isClientSide) return amount;
+            Entity attacker = source.getDirectEntity();
             if (attacker instanceof LivingEntity) {
-                if (!(target.getAttributes().hasAttribute(ALObjects.Attributes.DODGE_CHANCE))) return;
-                double dodgeChance = target.getAttributeValue(ALObjects.Attributes.DODGE_CHANCE);
-                double atkRangeSqr = attacker instanceof Player p ? getReach(p) * getReach(p) : getAttackReachSqr(attacker, target);
-                dodgeRand.setSeed(target.tickCount);
-                if (attacker.distanceToSqr(target) <= atkRangeSqr && dodgeRand.nextFloat() <= dodgeChance) {
-                    onDodge(target);
-                    e.setCanceled(true);
+                if (!(damaged.getAttributes().hasAttribute(ALObjects.Attributes.DODGE_CHANCE))) return amount;
+                double dodgeChance = damaged.getAttributeValue(ALObjects.Attributes.DODGE_CHANCE);
+                double atkRangeSqr = attacker instanceof Player p ? getReach(p) * getReach(p) : getAttackReachSqr(attacker, damaged);
+                dodgeRand.setSeed(damaged.tickCount);
+                if (attacker.distanceToSqr(damaged) <= atkRangeSqr && dodgeRand.nextFloat() <= dodgeChance) {
+                    onDodge(damaged);
+                    return 0f;
                 }
             }
+            return amount;
         });
     }
 
@@ -300,18 +304,17 @@ public class AttributeEvents {
      */
 
     public static void dodgeProjectile() {
-        EntityEvents.PROJECTILE_IMPACT.register((projectile, hitResult) -> {
-            Entity target = hitResult instanceof EntityHitResult entRes ? entRes.getEntity() : null;
+        EntityEvents.PROJECTILE_IMPACT.register(event -> {
+            Entity target = event.getRayTraceResult() instanceof EntityHitResult entRes ? entRes.getEntity() : null;
             if (target instanceof LivingEntity lvTarget) {
                 double dodgeChance = lvTarget.getAttributeValue(ALObjects.Attributes.DODGE_CHANCE);
                 // We can skip the distance check for projectiles, as "Projectile Impact" means the projectile is on the target.
                 dodgeRand.setSeed(target.tickCount);
                 if (dodgeRand.nextFloat() <= dodgeChance) {
                     onDodge(lvTarget);
-                    return true;
+                    event.setCanceled(true);
                 }
             }
-            return false;
         });
 
     }

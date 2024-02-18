@@ -6,7 +6,7 @@ import com.glisco.conjuring.items.soul_alloy_tools.SoulAlloyTool;
 import com.glisco.conjuring.mixin.ItemAccessor;
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.ItemAttributeModifierEvent;
-import io.github.fabricators_of_create.porting_lib.entity.events.living.LivingEntityDamageEvents;
+import io.github.fabricators_of_create.porting_lib.entity.events.LivingEntityEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -27,20 +27,21 @@ public class ModCompat {
     public static void fixPufferfishSkills() {
         try {
             if (FabricLoader.getInstance().isModLoaded("puffish_skills") && FabricLoader.getInstance().getModContainer("puffish_skills").orElseThrow().getMetadata().getVersion().getFriendlyString().startsWith("0.11")) {
-                LivingEntityDamageEvents.HURT.register(e -> {
-                    if (e.damageSource.getEntity() instanceof Player player) {
-                        if (e.damageSource.is(DamageTypeTags.IS_PROJECTILE)) {
+                LivingEntityEvents.HURT.register((source, damaged, amount) -> {
+                    if (source.getEntity() instanceof Player player) {
+                        if (source.is(DamageTypeTags.IS_PROJECTILE)) {
                             var attribute = ((EntityAttributeInstanceAccess) player.getAttribute(SkillsAttributes.RANGED_DAMAGE));
                             if (attribute != null) {
-                                e.damageAmount = (float) attribute.computeIncreasedValueForInitial(e.damageAmount);
+                                amount = (float) attribute.computeIncreasedValueForInitial(amount);
                             }
                         } else {
                             var attribute = ((EntityAttributeInstanceAccess) player.getAttribute(SkillsAttributes.MELEE_DAMAGE));
                             if (attribute != null) {
-                                e.damageAmount = (float) attribute.computeIncreasedValueForInitial(e.damageAmount);
+                                amount = (float) attribute.computeIncreasedValueForInitial(amount);
                             }
                         }
                     }
+                    return amount;
                 });
             }
         }
