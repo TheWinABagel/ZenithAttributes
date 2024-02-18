@@ -1,5 +1,5 @@
 plugins {
-	id 'fabric-loom' version '1.3-SNAPSHOT'
+	id 'fabric-loom' version '1.5-SNAPSHOT'
 	id 'maven-publish'
 	id "com.modrinth.minotaur" version "2.+"
 	id 'net.darkhax.curseforgegradle' version "1.1.16"
@@ -69,7 +69,7 @@ dependencies {
 	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:entity:${project.port_lib_version}"))
 	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:extensions:${project.port_lib_version}"))
 	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:lazy_registration:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:loot:2.1.1102+1.20-entity-refactor")) // Entity refactor branch
+	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:loot:${project.port_lib_version}")) // Entity refactor branch
 	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:mixin_extensions:${project.port_lib_version}"))
 	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:models:${project.port_lib_version}"))
 	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:registries:${project.port_lib_version}"))
@@ -86,7 +86,7 @@ dependencies {
 	modCompileOnly(modRuntimeOnly("dev.emi:trinkets:${project.trinkets_version}"))
 
 	// Reach entity attributes
-	modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}")
+	modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}"))
 
 	// Projectile Damage Attribute
 	modImplementation(include("maven.modrinth:projectile-damage-attribute:${project.projectile_damage}-fabric"))
@@ -99,7 +99,7 @@ dependencies {
 	implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixin_squared_version}"))
 
 	// Fakerlib
-	modImplementation("dev.shadowsoffire.placebo:placebo-fabric-1.20.1:${project.fakerlib_version}")
+	modImplementation("dev.shadowsoffire.placebo:FakerLib:${project.fakerlib_version}")
 
 	// REI + Arch
 	modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
