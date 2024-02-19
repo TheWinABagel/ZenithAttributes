@@ -3,12 +3,14 @@ package dev.shadowsoffire.attributeslib.impl;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
-import de.dafuqs.additionalentityattributes.Support;
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.*;
 import dev.shadowsoffire.attributeslib.commands.ModifierCommand;
+import dev.shadowsoffire.attributeslib.compat.ModCompat;
+import dev.shadowsoffire.attributeslib.components.ZenithAttributesComponents;
 import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
 import dev.shadowsoffire.attributeslib.util.AttributesUtil;
+import dev.shadowsoffire.attributeslib.util.FlyingAbility;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.PlayerEvents;
@@ -58,13 +60,12 @@ public class AttributeEvents {
         apothCriticalStrike();
         breakSpd();
         heal();
-        //mobXp();
         dodgeMelee();
         dodgeProjectile();
         affixModifiers();
-        //trackCooldown();
         commands();
         ModCompat.init();
+        FlyingAbility.initZenithFlyingAbility();
     }
 
     /**
@@ -232,10 +233,6 @@ public class AttributeEvents {
         });
     }
 
-    public static void mobXp() {
-        LivingEntityEvents.EXPERIENCE_DROP.register((i, attackingPlayer, entity) -> (int) (Support.getExperienceMod(attackingPlayer) * i));
-    }
-
     /**
      * Handles {link ALObjects#HEALING_RECEIVED}
      */
@@ -253,12 +250,13 @@ public class AttributeEvents {
      * Injected via @See ProjectileMixin
      */
     public static void modifyArrowVelocity(Args args, AbstractArrow arrow, float velocity) {
-        if (arrow.level().isClientSide || arrow.getCustomData().getBoolean("zenith_attributes.arrow.done")) return;
+        if (arrow.level().isClientSide) return;
+        if (ZenithAttributesComponents.ARROW_DONE.get(arrow).getValue()) return;
         if (arrow.getOwner() instanceof LivingEntity le) {
             if (Double.isNaN(le.getAttributeValue(ALObjects.Attributes.ARROW_VELOCITY))) return;
             args.set(3, (float) (velocity * le.getAttributeValue(ALObjects.Attributes.ARROW_VELOCITY)));
         }
-        arrow.getCustomData().putBoolean("zenith_attributes.arrow.done", true);
+        ZenithAttributesComponents.ARROW_DONE.get(arrow).setValue(true);
     }
 
     /**

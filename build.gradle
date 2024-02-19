@@ -60,30 +60,19 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Porting lib
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:base:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:core:${project.port_lib_version}"))
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:accessors:${project.port_lib_version}")
 	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:attributes:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:client_events:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:common:${project.port_lib_version}"))
 	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:entity:${project.port_lib_version}"))
 	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:extensions:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:lazy_registration:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:loot:${project.port_lib_version}")) // Entity refactor branch
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:mixin_extensions:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:models:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:registries:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:tags:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:tool_actions:${project.port_lib_version}"))
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:transfer:${project.port_lib_version}")
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:utility:${project.port_lib_version}"))
+
+	// Fakerlib
+	modImplementation("dev.shadowsoffire.placebo:FakerLib:${project.fakerlib_version}")
 
 	// CCA + PAL
 	modImplementation(include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"))
 	modImplementation(include("io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"))
 
 	// Trinkets
-	modCompileOnly(modRuntimeOnly("dev.emi:trinkets:${project.trinkets_version}"))
+	modCompileOnly("dev.emi:trinkets:${project.trinkets_version}")
 
 	// Reach entity attributes
 	modImplementation(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}"))
@@ -94,12 +83,8 @@ dependencies {
 	// Additional Entity Attributes
 	modImplementation(include("maven.modrinth:AdditionalEntityAttributes:${project.additional_attributes}"))
 
-	// Mixin Extras + Mixin^2 for mod compat
-	implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixin_extras_version}"))
+	//Mixin^2 for mod compat
 	implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixin_squared_version}"))
-
-	// Fakerlib
-	modImplementation("dev.shadowsoffire.placebo:FakerLib:${project.fakerlib_version}")
 
 	// REI + Arch
 	modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
@@ -107,26 +92,7 @@ dependencies {
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${project.rei_version}"
 
-	// For Polymer
-	modCompileOnly("eu.pb4:sgui:1.2.2+1.20")
-	modCompileOnly("eu.pb4:placeholder-api:2.1.3+1.20.1")
-	modCompileOnly('xyz.nucleoid:server-translations-api:2.0.0+1.20')
-	modCompileOnly('eu.pb4:polymer-core:0.5.15+1.20.1')
-	modCompileOnly('eu.pb4:polymer-resource-pack:0.5.15+1.20.1')
-	modCompileOnly('eu.pb4:polymer-virtual-entity:0.5.15+1.20.1')
-	modCompileOnly('eu.pb4:predicate-api:0.2.1+1.20.1')
-	modCompileOnly("eu.pb4:common-protection-api:1.0.0")
-
-	modCompileOnly("me.lucko:fabric-permissions-api:0.2-SNAPSHOT")
-	modCompileOnly "curse.maven:universal-graves-497175:4754378"
-
-	//modImplementation "maven.modrinth:obscure-api:16"
-	//modImplementation "maven.modrinth:aquamirae:ouUaC54p"
-
 	modCompileOnly "curse.maven:puffish-skills-835091:5007321"
-
-	modCompileOnly "curse.maven:iceberg-fabric-539382:4953470"
-	modCompileOnly "curse.maven:equipment-compare-fabric-541329:4940609"
 
 	//Conjuring
 	modCompileOnly("io.wispforest:lavender:0.1.0-pre.6+1.20")

@@ -1,4 +1,4 @@
-package dev.shadowsoffire.attributeslib.impl;
+package dev.shadowsoffire.attributeslib.compat;
 
 import com.glisco.conjuring.Conjuring;
 import com.glisco.conjuring.items.ConjuringItems;
@@ -22,7 +22,6 @@ public class ModCompat {
         fixPufferfishSkills();
         fixConjuringSwordHaste();
     }
-
 
     public static void fixPufferfishSkills() {
         try {

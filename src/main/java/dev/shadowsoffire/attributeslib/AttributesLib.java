@@ -6,11 +6,8 @@ import dev.shadowsoffire.attributeslib.impl.AttributeEvents;
 import dev.shadowsoffire.attributeslib.mixin.accessors.AttributeSupplierBuilderAccessor;
 import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
 import dev.shadowsoffire.attributeslib.util.AttributeInfo;
-import dev.shadowsoffire.attributeslib.util.DummyLootModifier;
-import dev.shadowsoffire.attributeslib.util.FlyingAbility;
 import dev.shadowsoffire.placebo.config.Configuration;
 import io.github.fabricators_of_create.porting_lib.attributes.PortingLibAttributes;
-import io.github.fabricators_of_create.porting_lib.loot.PortingLibLoot;
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
@@ -28,7 +25,6 @@ import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
 import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.entity.ai.attributes.DefaultAttributes;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.item.Item;
 import net.minecraft.world.item.TooltipFlag;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
@@ -60,7 +56,6 @@ public class AttributesLib implements ModInitializer {
 
         CritParticleMessage.init();
         ALObjects.bootstrap();
-        FlyingAbility.initZenithFlyingAbility();
 
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, loc("apoth_crit"), ALObjects.Particles.APOTH_CRIT);
         MobEffects.BLINDNESS.addAttributeModifier(Attributes.FOLLOW_RANGE, "f8c3de3d-1fea-4d7c-a8b0-22f63c4c3454", -0.75, Operation.MULTIPLY_TOTAL);
@@ -79,7 +74,6 @@ public class AttributesLib implements ModInitializer {
             });
         }
         //This is to prevent potential issues with this registry not being registered properly, will be removed when fixed
-        Registry.register(PortingLibLoot.GLOBAL_LOOT_MODIFIER_SERIALIZERS.get(), new ResourceLocation(MODID, "dummy"), DummyLootModifier.CODEC);
     }
 
     @Environment(EnvType.CLIENT)
