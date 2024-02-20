@@ -25,6 +25,7 @@ import java.util.List;
 public class ItemStackMixin {
 
     // Injects just before ItemStack.TooltipPart.MODIFIERS is written to the tooltip to remember where to rewind to.
+    @SuppressWarnings("UnresolvedMixinReference")
     @Inject(method = "getTooltipLines(Lnet/minecraft/world/entity/player/Player;Lnet/minecraft/world/item/TooltipFlag;)Ljava/util/List;", at = @At(value = "INVOKE", ordinal = 4, target = "net/minecraft/world/item/ItemStack.shouldShowInTooltip(ILnet/minecraft/world/item/ItemStack$TooltipPart;)Z"), locals = LocalCapture.CAPTURE_FAILHARD, require = 1)
     public void zenith_attributes$tooltipMarker(@Nullable Player pPlayer, TooltipFlag pIsAdvanced, CallbackInfoReturnable<List<Component>> cir, List<Component> list) {
         if (isPolymerItem()) return;
@@ -37,7 +38,6 @@ public class ItemStackMixin {
     public void zenith_attributes$tooltipMarker2(@Nullable Player player, TooltipFlag isAdvanced, CallbackInfoReturnable<List<Component>> cir, List<Component> list) {
         if (isPolymerItem()) return;
         list.add(Component.literal("ZENITH_REMOVE_MARKER_2"));
-
     }
 
     @Inject(method = "getTooltipLines", at = @At("RETURN"))
@@ -61,6 +61,5 @@ public class ItemStackMixin {
         catch (ClassNotFoundException e) {
             return false;
         }
-//        return ((ItemStack) (Object) this).getItem().getClass().getName().equals("eu.pb4.polymer.core.api.item");
     }
 }
