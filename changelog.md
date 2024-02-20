@@ -1,5 +1,9 @@
 
 
+## 0.2.0
+* Move to new porting lib, updating might cause issues! Be aware!
+* Fix crash with newer versions of Additional Entity Attributes
+
 ## 0.1.5
 * Fix crash on launch
 

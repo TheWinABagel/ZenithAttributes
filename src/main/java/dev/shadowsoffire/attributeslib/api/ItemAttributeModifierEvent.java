@@ -27,7 +27,7 @@ public class ItemAttributeModifierEvent {
 
     public static class AttributeModifierEvent {
 
-        private final Multimap<Attribute, AttributeModifier> originalModifiers;
+        public final Multimap<Attribute, AttributeModifier> originalModifiers;
         public Multimap<Attribute, AttributeModifier> nonChangableModifiers;
         @Nullable
         private Multimap<Attribute, AttributeModifier> changableModifiers;

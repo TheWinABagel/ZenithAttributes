@@ -7,6 +7,11 @@ public class BooleanComponent implements Component {
     protected final String name;
     private boolean value = false;
 
+    public BooleanComponent(String name, boolean value) {
+        this.name = name;
+        this.value = value;
+    }
+
     public BooleanComponent(String name) {
         this.name = name;
     }
