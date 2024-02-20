@@ -1,5 +1,8 @@
 
 
+## 0.2.0
+* Move to new porting lib, updating might cause issues! Be aware!
+
 ## 0.1.5
 * Fix crash on launch
 
