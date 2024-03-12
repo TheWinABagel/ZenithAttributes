@@ -1,4 +1,6 @@
 
+## 0.2.1
+* Move client only mixins to properly only run on the client
 
 ## 0.2.0
 * Move to new porting lib, updating might cause issues! Be aware!

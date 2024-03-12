@@ -190,7 +190,7 @@ public class AttributeEvents {
     }
 
     /**
-     * Handles {link ALObjects#CRIT_CHANCE} and {link ALObjects#CRIT_DAMAGE}
+     * Handles {@link ALObjects#CRIT_CHANCE} and {@link ALObjects#CRIT_DAMAGE}
      */
 
     public static void apothCriticalStrike() {

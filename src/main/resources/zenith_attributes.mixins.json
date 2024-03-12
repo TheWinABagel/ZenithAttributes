@@ -11,15 +11,15 @@
     "PlayerMixin",
     "PotionUtilsMixin",
     "ProjectileMixin",
-    "accessors.AbstractContainerScreenAccessor",
-    "accessors.AttributeSupplierBuilderAccessor",
-    "accessors.GuiGraphicsAccessor"
+    "accessors.AttributeSupplierBuilderAccessor"
   ],
   "injectors": {
     "defaultRequire": 1
   },
   "client": [
     "EffectRenderingInventoryScreenMixin",
+    "accessors.AbstractContainerScreenAccessor",
+    "accessors.GuiGraphicsAccessor",
     "client.AbstractContainerScreenMixin",
     "client.ScreenMixin"
   ]
