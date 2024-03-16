@@ -1,8 +1,8 @@
 plugins {
-	id 'fabric-loom' version '1.3-SNAPSHOT'
+	id 'fabric-loom' version '1.5-SNAPSHOT'
 	id 'maven-publish'
 	id "com.modrinth.minotaur" version "2.+"
-	id 'net.darkhax.curseforgegradle' version "1.1.16"
+	id 'net.darkhax.curseforgegradle' version "1.1.18"
 }
 
 version = project.mod_version
@@ -13,41 +13,17 @@ base {
 }
 
 repositories {
-	maven {
-		name = "Parchment"
-		url = 'https://maven.parchmentmc.org'
-	}
-	maven {
-		name = "Porting Lib"
-		url = "https://mvn.devos.one/snapshots/"
-	}
-	maven {
-		name = "CCA + PAL"
-		url = 'https://maven.ladysnake.org/releases'
-	}
-	maven {
-		url "https://maven.jamieswhiteshirt.com/libs-release"
-		content {
-			includeGroup "com.jamieswhiteshirt"
-		}
-	}
-	maven {
-		name = "Modrinth"
-		url = "https://api.modrinth.com/maven"
-		content {
-			includeGroup "maven.modrinth"
-		}
-	}
-	maven { url "https://jitpack.io/" }
-	maven { url 'https://maven.blamejared.com' }
-	maven { url "https://maven.shedaniel.me" }
-	maven { url "https://maven.terraformersmc.com" }
-	maven { url "https://cursemaven.com" }
-	maven { url "https://maven.bai.lol" }
-	maven { url 'https://maven.nucleoid.xyz' }
-	maven { url 'https://maven.wispforest.io' } //owo lib
-
-	mavenLocal()
+	maven { url = 'https://maven.parchmentmc.org' }						//Parchment
+	maven { url = "https://mvn.devos.one/snapshots/" } 					//Porting lib
+	maven { url = "https://mvn.devos.one/releases/" } 					//Porting lib
+	maven { url = 'https://maven.ladysnake.org/releases' } 				//CCA, PAL
+	maven { url = "https://maven.jamieswhiteshirt.com/libs-release" }	//Reach Entity Attributes
+	maven { url = "https://api.modrinth.com/maven" }					//Projectile damage, Additional Entity Attributes
+	maven { url = "https://jitpack.io/" }								//Mixin Squared
+	maven { url = "https://maven.shedaniel.me" }						//REI, Arch
+	maven { url = "https://maven.terraformersmc.com" }					//Trinkets, EMI
+	maven { url = "https://cursemaven.com" }							//Conjuring
+	mavenLocal()														//Fakerlib TODO Create maven/move to jitpack
 }
 
 dependencies {
@@ -60,79 +36,50 @@ dependencies {
 	modImplementation "net.fabricmc.fabric-api:fabric-api:${project.fabric_version}"
 
 	// Porting lib
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:base:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:core:${project.port_lib_version}"))
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:accessors:${project.port_lib_version}")
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:attributes:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:client_events:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:common:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:entity:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:extensions:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:lazy_registration:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:loot:2.1.1102+1.20-entity-refactor")) // Entity refactor branch
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:mixin_extensions:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:models:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:registries:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:tags:${project.port_lib_version}"))
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:tool_actions:${project.port_lib_version}"))
-	modImplementation("io.github.fabricators_of_create.Porting-Lib:transfer:${project.port_lib_version}")
-	modImplementation(include("io.github.fabricators_of_create.Porting-Lib:utility:${project.port_lib_version}"))
+	modApi(include("io.github.fabricators_of_create.Porting-Lib:attributes:${project.port_lib_version}"))
+	modApi(include("io.github.fabricators_of_create.Porting-Lib:entity:${project.port_lib_version}"))
+	modApi(include("io.github.fabricators_of_create.Porting-Lib:extensions:${project.port_lib_version}"))
+
+	// Fakerlib
+	modImplementation("dev.bagel.fakerlib:FakerLib:${project.fakerlib_version}")
 
 	// CCA + PAL
-	modImplementation(include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"))
+	modApi(include("dev.onyxstudios.cardinal-components-api:cardinal-components-base:${project.cardinal_components_version}"))
+	modApi(include("dev.onyxstudios.cardinal-components-api:cardinal-components-entity:${project.cardinal_components_version}"))
 	modImplementation(include("io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"))
 
 	// Trinkets
-	modCompileOnly(modRuntimeOnly("dev.emi:trinkets:${project.trinkets_version}"))
+	modCompileOnly("dev.emi:trinkets:${project.trinkets_version}")
 
 	// Reach entity attributes
-	modImplementation("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}")
+	modApi(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}"))
 
 	// Projectile Damage Attribute
-	modImplementation(include("maven.modrinth:projectile-damage-attribute:${project.projectile_damage}-fabric"))
+	modApi(include("maven.modrinth:projectile-damage-attribute:${project.projectile_damage}-fabric"))
 
 	// Additional Entity Attributes
-	modImplementation(include("maven.modrinth:AdditionalEntityAttributes:${project.additional_attributes}"))
+	modApi(include("maven.modrinth:AdditionalEntityAttributes:${project.additional_attributes}"))
 
-	// Mixin Extras + Mixin^2 for mod compat
-	implementation(annotationProcessor("io.github.llamalad7:mixinextras-fabric:${project.mixin_extras_version}"))
+	//Mixin^2 for mod compat
 	implementation(annotationProcessor("com.github.bawnorton.mixinsquared:mixinsquared-fabric:${project.mixin_squared_version}"))
 
-	// Fakerlib
-	modImplementation("dev.shadowsoffire.placebo:placebo-fabric-1.20.1:${project.fakerlib_version}")
-
-	// REI + Arch
-	modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
-	modRuntimeOnly "dev.architectury:architectury-fabric:${project.arch_version}"
+	// REI
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-api-fabric:${project.rei_version}"
 	modCompileOnly "me.shedaniel:RoughlyEnoughItems-default-plugin-fabric:${project.rei_version}"
 
-	// For Polymer
-	modCompileOnly("eu.pb4:sgui:1.2.2+1.20")
-	modCompileOnly("eu.pb4:placeholder-api:2.1.3+1.20.1")
-	modCompileOnly('xyz.nucleoid:server-translations-api:2.0.0+1.20')
-	modCompileOnly('eu.pb4:polymer-core:0.5.15+1.20.1')
-	modCompileOnly('eu.pb4:polymer-resource-pack:0.5.15+1.20.1')
-	modCompileOnly('eu.pb4:polymer-virtual-entity:0.5.15+1.20.1')
-	modCompileOnly('eu.pb4:predicate-api:0.2.1+1.20.1')
-	modCompileOnly("eu.pb4:common-protection-api:1.0.0")
+	// EMI
+	modCompileOnly "dev.emi:emi-fabric:${emi_version}"
 
-	modCompileOnly("me.lucko:fabric-permissions-api:0.2-SNAPSHOT")
-	modCompileOnly "curse.maven:universal-graves-497175:4754378"
+	switch (recipe_viewer.toLowerCase(Locale.ROOT)) {
+		case "rei": modRuntimeOnly "me.shedaniel:RoughlyEnoughItems-fabric:${project.rei_version}"
+					modRuntimeOnly "dev.architectury:architectury-fabric:${project.arch_version}"; break
+		case "emi": modRuntimeOnly("dev.emi:emi-fabric:${project.emi_version}"); break
+		case "disabled": break
+		default: println("Unknown recipe viewer specified: $recipe_viewer. Must be EMI, REI or disabled.")
+	}
 
-	//modImplementation "maven.modrinth:obscure-api:16"
-	//modImplementation "maven.modrinth:aquamirae:ouUaC54p"
-
-	modCompileOnly "curse.maven:puffish-skills-835091:5007321"
-
-	modCompileOnly "curse.maven:iceberg-fabric-539382:4953470"
-	modCompileOnly "curse.maven:equipment-compare-fabric-541329:4940609"
-
-	//Conjuring
-	modCompileOnly("io.wispforest:lavender:0.1.0-pre.6+1.20")
-	modCompileOnly("io.wispforest:owo-lib:0.11.0+1.20")
-	modCompileOnly "curse.maven:conjuring-422310:4580578"
-
+	//Conjuring (has specific compat)
+	modCompileOnly "curse.maven:conjuring-422310:${project.conjuring_id}"
 }
 
 loom {
@@ -154,6 +101,7 @@ tasks.withType(JavaCompile).configureEach {
 java {
 	sourceCompatibility = JavaVersion.VERSION_17
 	targetCompatibility = JavaVersion.VERSION_17
+	withSourcesJar()
 }
 
 jar {
@@ -169,14 +117,6 @@ publishing {
 			from components.java
 		}
 	}
-
-	// See https://docs.gradle.org/current/userguide/publishing_maven.html for information on how to set up publishing.
-	repositories {
-		// Add repositories to publish to here.
-		// Notice: This block does NOT have the same function as the block in the top level.
-		// The repositories here will be used for publishing your artifact, not for
-		// retrieving dependencies.
-	}
 }
 
 modrinth {
@@ -188,7 +128,6 @@ modrinth {
 	gameVersions = ["1.20.1"]
 	loaders = ["fabric"]
 	changelog = "[Changelog](https://github.com/TheWinABagel/ZenithAttributes/blob/master/changelog.md)"
-	//debugMode = true
 	dependencies {
 		required.project "fabric-api"
 		required.project("fakerlib")
@@ -198,7 +137,6 @@ modrinth {
 
 task publishCurseForge(type: net.darkhax.curseforgegradle.TaskPublishCurseForge) {
 	apiToken = System.getenv("cf_token")
-	//debugMode = true
 	def mainFile = upload(910078, remapJar)
 	mainFile.changelog = "https://github.com/TheWinABagel/ZenithAttributes/blob/master/changelog.md"
 	mainFile.releaseType = "beta"

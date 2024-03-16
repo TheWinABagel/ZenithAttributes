@@ -23,6 +23,14 @@
 		],
 		"mixinsquared": [
 			"dev.shadowsoffire.attributeslib.mixin.ZenithAttributesMixinCanceller"
+		],
+		"cardinal-components": [
+			"dev.shadowsoffire.attributeslib.components.ZenithAttributesComponents"
+		]
+	},
+	"custom": {
+		"cardinal-components": [
+			"zenith_attributes:arrow_done"
 		]
 	},
 	"mixins": [

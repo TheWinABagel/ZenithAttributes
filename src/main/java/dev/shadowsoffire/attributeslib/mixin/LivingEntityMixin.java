@@ -1,6 +1,7 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import dev.shadowsoffire.attributeslib.api.ALCombatRules;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
 import dev.shadowsoffire.attributeslib.api.HealEvent;
@@ -119,7 +120,9 @@ public abstract class LivingEntityMixin extends Entity {
         .add(ALObjects.Attributes.PROT_SHRED)
         .add(ALObjects.Attributes.DODGE_CHANCE)
         .add(ALObjects.Attributes.ELYTRA_FLIGHT)
-        .add(ALObjects.Attributes.CREATIVE_FLIGHT);
+        .add(ALObjects.Attributes.CREATIVE_FLIGHT)
+        .add(AdditionalEntityAttributes.CRITICAL_BONUS_DAMAGE); //Done to fix crash, as it used to be applied to all entities and is now applied to only players
+
     }
 
 }
