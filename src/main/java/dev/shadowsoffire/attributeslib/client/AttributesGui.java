@@ -2,11 +2,11 @@ package dev.shadowsoffire.attributeslib.client;
 
 import com.mojang.blaze3d.systems.RenderSystem;
 import com.mojang.blaze3d.vertex.PoseStack;
+import dev.shadowsoffire.attributeslib.ALConfig;
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.IFormattableAttribute;
 import dev.shadowsoffire.attributeslib.mixin.accessors.AbstractContainerScreenAccessor;
 import dev.shadowsoffire.attributeslib.mixin.accessors.GuiGraphicsAccessor;
-import dev.shadowsoffire.attributeslib.util.AttributeInfo;
 import dev.shadowsoffire.placebo.PlaceboClient;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.Minecraft;
@@ -55,6 +55,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
     protected static float scrollOffset = 0;
     // Ditto.
     protected static boolean hideUnchanged = false;
+    protected static boolean swappedFromTrinkets = false;
 
     protected final InventoryScreen parent;
     protected final Player player;
@@ -80,7 +81,10 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
         this.topPos = ((AbstractContainerScreenAccessor) parent).getTopPos();
         this.toggleBtn = new ImageButton(((AbstractContainerScreenAccessor) parent).getLeftPos() + 63, ((AbstractContainerScreenAccessor) parent).getTopPos() + 10, 10, 10, WIDTH, 0, 10, TEXTURES, 256, 256, btn -> {
             this.toggleVisibility();
-        }, Component.translatable("zenith_attributes.gui.show_attributes"));
+        }, Component.translatable("zenith_attributes.gui.show_attributes")) {
+            @Override
+            public void setFocused(boolean pFocused) {}
+        };
         if (this.parent.children().size() > 1) {
             GuiEventListener btn = this.parent.children().get(0);
             this.recipeBookButton = btn instanceof ImageButton imgBtn ? imgBtn : null;
@@ -91,13 +95,12 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
 
     public void refreshData() {
         this.data.clear();
-        BuiltInRegistries.ATTRIBUTE.stream().map(this.player::getAttribute).filter(Objects::nonNull).filter(ai -> {
-            AttributeInfo info = AttributesLib.getAttrInfo(ai.getAttribute());
-            if (!info.getShowsInMenu()) return false;
-            if (!hideUnchanged) return true;
-            if (!ai.getAttribute().isClientSyncable()) return false;
-            return ai.getBaseValue() != ai.getValue();
-        }).forEach(this.data::add);
+        BuiltInRegistries.ATTRIBUTE.stream()
+                .map(this.player::getAttribute)
+                .filter(Objects::nonNull)
+                .filter(ai -> !ALConfig.hiddenAttributes.contains(BuiltInRegistries.ATTRIBUTE.getKey(ai.getAttribute())))
+                .filter(ai -> !hideUnchanged || (ai.getBaseValue() != ai.getValue()))
+                .forEach(this.data::add);
         this.data.sort(this::compareAttrs);
         this.startIndex = (int) (scrollOffset * this.getOffScreenRows() + 0.5D);
     }

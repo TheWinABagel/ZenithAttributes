@@ -1,5 +1,6 @@
 package dev.shadowsoffire.attributeslib.mixin.client;
 
+import dev.shadowsoffire.attributeslib.ALConfig;
 import dev.shadowsoffire.attributeslib.client.AttributesGui;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.gui.components.Renderable;
@@ -16,43 +17,41 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(Screen.class)
 public abstract class ScreenMixin {
     @Shadow protected abstract <T extends GuiEventListener & Renderable> T addRenderableWidget(T widget);
-    @Unique private boolean hasLoaded = false;
+    @Unique private boolean zenithAttributes$hasLoaded = false;
 
-    @Inject(method = "rebuildWidgets", at = @At(value = "TAIL"), cancellable = true)
+    @Inject(method = "rebuildWidgets", at = @At(value = "TAIL"))
     private void zenith_attributes$postRebuildWidgets(CallbackInfo ci) {
-        if ((Screen) (Object) this instanceof InventoryScreen scn){
+        if (ALConfig.enableAttributesGui && (Screen) (Object) this instanceof InventoryScreen scn) {
             var atrComp = new AttributesGui(scn);
             this.addRenderableWidget(atrComp);
             this.addRenderableWidget(atrComp.toggleBtn);
             this.addRenderableWidget(atrComp.hideUnchangedBtn);
             if (AttributesGui.wasOpen) atrComp.toggleVisibility();
-            hasLoaded = true;
+            zenithAttributes$hasLoaded = true;
         }
-
     }
 
         @Inject(method = "init(Lnet/minecraft/client/Minecraft;II)V", at = @At(value = "INVOKE", target = "net/minecraft/client/gui/screens/Screen.init ()V", shift = At.Shift.AFTER), cancellable = true)
         private void zenith_attributes$postInit(Minecraft minecraft, int width, int height, CallbackInfo ci) {
-            if ((Screen) (Object) this instanceof InventoryScreen scn){
+            if (ALConfig.enableAttributesGui && (Screen) (Object) this instanceof InventoryScreen scn) {
                 var atrComp = new AttributesGui(scn);
                 this.addRenderableWidget(atrComp);
                 this.addRenderableWidget(atrComp.toggleBtn);
                 this.addRenderableWidget(atrComp.hideUnchangedBtn);
                 if (AttributesGui.wasOpen) atrComp.toggleVisibility();
-                hasLoaded = true;
+                zenithAttributes$hasLoaded = true;
             }
-
         }
 
     @Inject(method = "init()V", at = @At("HEAD"))
     private void zenith_attributes$insertScreen(CallbackInfo ci){
-        if ((Screen) (Object) this instanceof InventoryScreen scn && !hasLoaded){
+        if ((Screen) (Object) this instanceof InventoryScreen scn && !zenithAttributes$hasLoaded){
             var atrComp = new AttributesGui(scn);
             this.addRenderableWidget(atrComp);
             this.addRenderableWidget(atrComp.toggleBtn);
             this.addRenderableWidget(atrComp.hideUnchangedBtn);
             if (AttributesGui.wasOpen) atrComp.toggleVisibility();
-            this.hasLoaded = false;
+            this.zenithAttributes$hasLoaded = false;
         }
     }
 }

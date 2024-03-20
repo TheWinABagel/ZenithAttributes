@@ -11,7 +11,6 @@ import io.github.fabricators_of_create.porting_lib.attributes.PortingLibAttribut
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import net.fabricmc.api.ModInitializer;
-import net.fabricmc.fabric.api.event.lifecycle.v1.ServerLifecycleEvents;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.client.Minecraft;
 import net.minecraft.core.Registry;
@@ -68,12 +67,7 @@ public class AttributesLib implements ModInitializer {
         }
         if (FabricLoader.getInstance().isModLoaded("trinkets")) TrinketsCompat.init();
 
-        if (FabricLoader.getInstance().getEnvironmentType().equals(EnvType.SERVER)) {
-            ServerLifecycleEvents.SERVER_STARTING.register(server -> {
-                AttributesLib.reload(false);
-            });
-        }
-        //This is to prevent potential issues with this registry not being registered properly, will be removed when fixed
+        ALConfig.load();
     }
 
     @Environment(EnvType.CLIENT)
@@ -97,7 +91,6 @@ public class AttributesLib implements ModInitializer {
         ((AttributeSupplierBuilderAccessor) Player.createAttributes()).getBuilder().forEach((attribute, attributeInstance) -> {
             ATTRIBUTE_INFO.put(attribute, AttributeInfo.load(attribute, attributeInfoConfig));
         });
-
 
         if (!e && attributeInfoConfig.hasChanged()) attributeInfoConfig.save();
     }

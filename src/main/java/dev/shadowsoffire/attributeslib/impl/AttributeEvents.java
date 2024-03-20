@@ -3,6 +3,7 @@ package dev.shadowsoffire.attributeslib.impl;
 import com.jamieswhiteshirt.reachentityattributes.ReachEntityAttributes;
 import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
+import dev.shadowsoffire.attributeslib.ALConfig;
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.*;
 import dev.shadowsoffire.attributeslib.commands.ModifierCommand;
@@ -11,6 +12,7 @@ import dev.shadowsoffire.attributeslib.components.ZenithAttributesComponents;
 import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
 import dev.shadowsoffire.attributeslib.util.AttributesUtil;
 import dev.shadowsoffire.attributeslib.util.FlyingAbility;
+import dev.shadowsoffire.placebo.events.ReloadableServerEvent;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.PlayerEvents;
@@ -64,6 +66,7 @@ public class AttributeEvents {
         dodgeProjectile();
         affixModifiers();
         commands();
+        reloads();
         ModCompat.init();
         FlyingAbility.initZenithFlyingAbility();
     }
@@ -154,7 +157,7 @@ public class AttributeEvents {
 
     public static void meleeDamageAttributes() {
         LivingEntityEvents.HURT.register((source, damaged, amount) -> {
-            if (damaged.level().isClientSide) return amount;
+            if (damaged.level().isClientSide || damaged.isDeadOrDying()) return amount;
             if (noRecurse) return amount;
             noRecurse = true;
             if (source.getDirectEntity() instanceof LivingEntity attacker && AttributesUtil.isPhysicalDamage(source)) {
@@ -177,6 +180,9 @@ public class AttributeEvents {
                     damaged.addEffect(new MobEffectInstance(MobEffects.MOVEMENT_SLOWDOWN, (int) (15 * coldDmg), Mth.floor(coldDmg / 5)));
                 }
                 damaged.invulnerableTime = time;
+                if (damaged.isDeadOrDying()) {
+                    damaged.getCustomData().putBoolean("zenith.killed_by_aux_dmg", true);
+                }
             }
             noRecurse = false;
             return amount;
@@ -190,7 +196,7 @@ public class AttributeEvents {
     }
 
     /**
-     * Handles {@link ALObjects#CRIT_CHANCE} and {@link ALObjects#CRIT_DAMAGE}
+     * Handles {@link ALObjects.Attributes#CRIT_CHANCE} and {link ALObjects#CRIT_DAMAGE}
      */
 
     public static void apothCriticalStrike() {
@@ -355,4 +361,7 @@ public class AttributeEvents {
         });
     }
 
+    public static void reloads() {
+        ReloadableServerEvent.addListeners(ALConfig.makeReloader());
+    }
 }
