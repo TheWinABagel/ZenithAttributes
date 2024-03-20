@@ -1,11 +1,12 @@
 package dev.shadowsoffire.attributeslib.compat;
 
 import com.google.common.collect.Multimap;
-import dev.emi.trinkets.api.*;
-import dev.shadowsoffire.attributeslib.AttributesLib;
+import dev.emi.trinkets.api.SlotAttributes;
+import dev.emi.trinkets.api.SlotReference;
+import dev.emi.trinkets.api.TrinketItem;
+import dev.emi.trinkets.api.TrinketsApi;
 import dev.shadowsoffire.attributeslib.client.ModifierSource;
 import dev.shadowsoffire.attributeslib.client.ModifierSourceType;
-import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -16,12 +17,6 @@ import java.util.UUID;
 import java.util.function.BiConsumer;
 
 public class TrinketsCompat {
-
-    static {
-        if (!FabricLoader.getInstance().isModLoaded("trinkets")) {
-            throw new UnsupportedOperationException("This optional compat class requires Trinkets to be loaded.");
-        }
-    }
 
     public static void init() {
         ModifierSourceType.register(new ModifierSourceType<>() {

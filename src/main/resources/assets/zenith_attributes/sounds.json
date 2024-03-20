@@ -1,0 +1,7 @@
+{
+  "dodge": {
+    "category": "neutral",
+    "subtitle": "zenith_attributes.subtitle.dodge",
+    "sounds": ["zenith_attributes:dodge"]
+  }
+}

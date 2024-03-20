@@ -1,8 +1,11 @@
 package dev.shadowsoffire.attributeslib.api;
 
+import dev.shadowsoffire.attributeslib.ALConfig;
 import dev.shadowsoffire.attributeslib.api.ALObjects.Attributes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
+
+import java.math.BigDecimal;
 
 /**
  * Contains AL-specific combat calculations for armor and protection values.
@@ -46,6 +49,9 @@ public class ALCombatRules {
      * @see #getDamageAfterProtection(LivingEntity, DamageSource, float, float)
      */
     public static float getProtDamageReduction(float protPoints) {
+        if (ALConfig.getProtExpr().isPresent()) {
+            return ALConfig.getProtExpr().get().setVariable("protPoints", new BigDecimal(protPoints)).eval().floatValue();
+        }
         return 1 - Math.min(0.025F * protPoints, 0.85F);
     }
 
@@ -90,13 +96,17 @@ public class ALCombatRules {
     /**
      * Computes the A value used in the Y = A / (A + X) formula used by {@link #getArmorDamageReduction(float, float)}.<br>
      * This value is a flat 10 for small damage values (< 20), and increases after that point.
-     * 
+     * <p>
+     * This expression may be configured in the attributeslib.cfg file.
+     *
      * @param damage The amount of incoming damage.
      * @return The A value, for use in {@link #getArmorDamageReduction(float, float)}
      */
     public static float getAValue(float damage) {
-        if (damage < 20) return 10;
-        return 10 + (damage - 20) / 2;
+        if (ALConfig.getAValueExpr().isPresent()) {
+            return ALConfig.getAValueExpr().get().setVariable("damage", new BigDecimal(damage)).eval().floatValue();
+        }
+        return damage < 20 ? 10 : 10 + (damage - 20) / 2;
     }
 
     /**
@@ -114,6 +124,9 @@ public class ALCombatRules {
      */
     public static float getArmorDamageReduction(float damage, float armor) {
         float a = getAValue(damage);
+        if (ALConfig.getArmorExpr().isPresent()) {
+            return ALConfig.getArmorExpr().get().setVariable("a", new BigDecimal(a)).setVariable("damage", new BigDecimal(damage)).setVariable("armor", new BigDecimal(armor)).eval().floatValue();
+        }
         return a / (a + armor);
     }
 }

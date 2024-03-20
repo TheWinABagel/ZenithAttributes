@@ -3,6 +3,7 @@ package dev.shadowsoffire.attributeslib.client;
 import com.google.common.collect.Lists;
 import com.google.common.collect.Multimap;
 import com.mojang.datafixers.util.Pair;
+import dev.shadowsoffire.attributeslib.ALConfig;
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
 import dev.shadowsoffire.attributeslib.api.AttributeHelper;
@@ -15,6 +16,7 @@ import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
+import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.ChatFormatting;
 import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.particle.CritParticle;
@@ -25,6 +27,7 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
 import net.minecraft.network.chat.contents.LiteralContents;
+import net.minecraft.server.packs.PackType;
 import net.minecraft.world.effect.MobEffect;
 import net.minecraft.world.effect.MobEffectInstance;
 import net.minecraft.world.entity.EquipmentSlot;
@@ -49,6 +52,7 @@ public class AttributesLibClient implements ClientModInitializer {
         tooltips();
         //    addAttribComponent();
         effectGuiTooltips();
+        clientReload();
 
         potionTooltips();
         ParticleFactoryRegistry.getInstance().register(ALObjects.Particles.APOTH_CRIT, CritParticle.Provider::new);
@@ -56,6 +60,10 @@ public class AttributesLibClient implements ClientModInitializer {
         ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
             AttributesLib.reload(false);
         });
+    }
+
+    public static void clientReload() {
+        ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(ALConfig.makeReloader());
     }
 
     public void tooltips() {
@@ -134,6 +142,8 @@ public class AttributesLibClient implements ClientModInitializer {
 
     public void potionTooltips() {
         ItemTooltipCallback.EVENT.register((stack, context, tooltips) -> {
+            if (!ALConfig.enablePotionTooltips) return;
+
             if (stack.getItem() instanceof PotionItem) {
                 List<MobEffectInstance> effects = PotionUtils.getMobEffects(stack);
                 if (effects.size() == 1 && tooltips.size() >= 2) {
@@ -150,9 +160,6 @@ public class AttributesLibClient implements ClientModInitializer {
                 }
             }
         });
-
-
-
     }
 
     public static Multimap<Attribute, AttributeModifier> getSortedModifiers(ItemStack stack, EquipmentSlot slot) {
