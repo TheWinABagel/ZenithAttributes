@@ -3,9 +3,7 @@ package dev.shadowsoffire.attributeslib;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
 import dev.shadowsoffire.attributeslib.compat.TrinketsCompat;
 import dev.shadowsoffire.attributeslib.impl.AttributeEvents;
-import dev.shadowsoffire.attributeslib.mixin.accessors.AttributeSupplierBuilderAccessor;
 import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
-import dev.shadowsoffire.attributeslib.util.AttributeInfo;
 import dev.shadowsoffire.placebo.config.Configuration;
 import io.github.fabricators_of_create.porting_lib.attributes.PortingLibAttributes;
 import net.fabricmc.api.EnvType;
@@ -29,8 +27,6 @@ import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 
 import java.io.File;
-import java.util.HashMap;
-import java.util.Map;
 
 
 public class AttributesLib implements ModInitializer {
@@ -39,7 +35,6 @@ public class AttributesLib implements ModInitializer {
     public static final Logger LOGGER = LogManager.getLogger(MODID);
     public static File configDir;
     static Configuration attributeInfoConfig;
-    public static final Map<Attribute, AttributeInfo> ATTRIBUTE_INFO = new HashMap<>();
 
     /**
      * Static record of {@link Player#getAttackStrengthScale(float)} for use in damage events.<br>
@@ -51,10 +46,10 @@ public class AttributesLib implements ModInitializer {
 
     @Override
     public void onInitialize() {
+        ALObjects.bootstrap();
         AttributeEvents.init();
 
         CritParticleMessage.init();
-        ALObjects.bootstrap();
 
         Registry.register(BuiltInRegistries.PARTICLE_TYPE, loc("apoth_crit"), ALObjects.Particles.APOTH_CRIT);
         MobEffects.BLINDNESS.addAttributeModifier(Attributes.FOLLOW_RANGE, "f8c3de3d-1fea-4d7c-a8b0-22f63c4c3454", -0.75, Operation.MULTIPLY_TOTAL);
@@ -81,34 +76,6 @@ public class AttributesLib implements ModInitializer {
 
     public static ResourceLocation loc(String path) {
         return new ResourceLocation(MODID, path);
-    }
-
-    public static void reload(boolean e) {
-        attributeInfoConfig = new Configuration(new File(configDir, "attributes.cfg"));
-        attributeInfoConfig.setTitle("Zenith Attributes Information");
-        attributeInfoConfig.setComment("This file contains configurable data for each attribute.\nThe names of each category correspond to the registry names of every loaded attribute.");
-        ATTRIBUTE_INFO.clear();
-        ((AttributeSupplierBuilderAccessor) Player.createAttributes()).getBuilder().forEach((attribute, attributeInstance) -> {
-            ATTRIBUTE_INFO.put(attribute, AttributeInfo.load(attribute, attributeInfoConfig));
-        });
-
-        if (!e && attributeInfoConfig.hasChanged()) attributeInfoConfig.save();
-    }
-
-    @SuppressWarnings("deprecation")
-    public static AttributeInfo getAttrInfo(Attribute attribute) {
-        AttributeInfo info = ATTRIBUTE_INFO.get(attribute);
-
-        if (attributeInfoConfig == null) {
-            return new AttributeInfo(attribute);
-        }
-        if (info == null) {
-            info = AttributeInfo.load(attribute, attributeInfoConfig);
-            ATTRIBUTE_INFO.put(attribute, info);
-            if (attributeInfoConfig.hasChanged()) attributeInfoConfig.save();
-        }
-
-        return info;
     }
 
     private static class ClientAccess {

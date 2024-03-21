@@ -2,9 +2,7 @@ package dev.shadowsoffire.attributeslib.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import dev.shadowsoffire.attributeslib.AttributesLib;
-import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.Entity;
-import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.player.Player;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
@@ -20,7 +18,7 @@ public class PlayerMixin {
     }
 
     @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hurt(Lnet/minecraft/world/damagesource/DamageSource;F)Z", ordinal = 0), method = "attack(Lnet/minecraft/world/entity/Entity;)V")
-    private boolean zenith_attributes$handleKilledByAuxDmg(boolean original, LivingEntity target, DamageSource src, float dmg) {
+    private boolean zenith_attributes$handleKilledByAuxDmg(boolean original, Entity target) {
         return original || target.getCustomData().getBoolean("zenith.killed_by_aux_dmg");
     }
 }

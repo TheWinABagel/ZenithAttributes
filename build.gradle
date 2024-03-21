@@ -49,7 +49,7 @@ dependencies {
 	modImplementation(include("io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"))
 
 	// Trinkets
-	modCompileOnly("dev.emi:trinkets:${project.trinkets_version}")
+	modCompileOnly(modRuntimeOnly"dev.emi:trinkets:${project.trinkets_version}")
 
 	// Reach entity attributes
 	modApi(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}"))
@@ -80,6 +80,9 @@ dependencies {
 
 	//Conjuring (has specific compat)
 	modCompileOnly "curse.maven:conjuring-422310:${project.conjuring_id}"
+
+	//Artifacts (They register attributes to their items that work differently than normal)
+	modCompileOnly ("curse.maven:artifacts-312353:5174587")
 }
 
 loom {

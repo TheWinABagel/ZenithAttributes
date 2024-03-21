@@ -16,7 +16,7 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class ALConfig {
 
-    public static final String[] DEFAULT_BLOCKED_ATTRIBUTES = { "forge:nametag_distance", "attributeslib:creative_flight", "attributeslib:elytra_flight", "attributeslib:ghost_health" };
+    public static final String[] DEFAULT_BLOCKED_ATTRIBUTES = { "zenith_attributes:creative_flight", "zenith_attributes:elytra_flight", "zenith_attributes:ghost_health" };
 
     public static boolean enableAttributesGui = true;
     public static boolean enablePotionTooltips = true;
