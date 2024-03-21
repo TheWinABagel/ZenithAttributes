@@ -1,6 +1,7 @@
 {
   "required": true,
   "package": "dev.shadowsoffire.attributeslib.mixin",
+  "plugin": "dev.shadowsoffire.attributeslib.mixin.compat.Plugin",
   "compatibilityLevel": "JAVA_17",
   "mixins": [
     "AttributeMixin",
@@ -11,7 +12,8 @@
     "PlayerMixin",
     "PotionUtilsMixin",
     "ProjectileMixin",
-    "accessors.AttributeSupplierBuilderAccessor"
+    "accessors.AttributeSupplierBuilderAccessor",
+    "compat.artifacts.present.AttributeModifyingItemMixin"
   ],
   "injectors": {
     "defaultRequire": 1

@@ -13,7 +13,6 @@ import dev.shadowsoffire.attributeslib.api.client.GatherEffectScreenTooltipsEven
 import dev.shadowsoffire.attributeslib.api.client.GatherSkippedAttributeTooltipsEvent;
 import dev.shadowsoffire.attributeslib.api.client.ItemTooltipCallbackWithPlayer;
 import net.fabricmc.api.ClientModInitializer;
-import net.fabricmc.fabric.api.client.event.lifecycle.v1.ClientLifecycleEvents;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
@@ -49,21 +48,13 @@ public class AttributesLibClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
+        //    addAttribComponent(); Done via mixin
         tooltips();
-        //    addAttribComponent();
         effectGuiTooltips();
-        clientReload();
-
         potionTooltips();
-        ParticleFactoryRegistry.getInstance().register(ALObjects.Particles.APOTH_CRIT, CritParticle.Provider::new);
 
-        ClientLifecycleEvents.CLIENT_STARTED.register(client -> {
-            AttributesLib.reload(false);
-        });
-    }
-
-    public static void clientReload() {
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(ALConfig.makeReloader());
+        ParticleFactoryRegistry.getInstance().register(ALObjects.Particles.APOTH_CRIT, CritParticle.Provider::new);
     }
 
     public void tooltips() {

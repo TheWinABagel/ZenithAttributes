@@ -1,5 +1,6 @@
 package dev.shadowsoffire.attributeslib.compat;
 
+import artifacts.item.wearable.AttributeModifyingItem;
 import com.google.common.collect.Multimap;
 import dev.emi.trinkets.api.SlotAttributes;
 import dev.emi.trinkets.api.SlotReference;
@@ -7,6 +8,7 @@ import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.TrinketsApi;
 import dev.shadowsoffire.attributeslib.client.ModifierSource;
 import dev.shadowsoffire.attributeslib.client.ModifierSourceType;
+import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
 import net.minecraft.world.entity.ai.attributes.AttributeModifier;
@@ -29,13 +31,15 @@ public class TrinketsCompat {
                         stringTrinketInventoryMap.forEach((slotId, trinketInventory) -> {
                             for (int i = 0; i < trinketInventory.getContainerSize(); i++) {
                                 ItemStack stack = trinketInventory.getItem(i);
-                                if (!stack.isEmpty() && stack.getItem() instanceof TrinketItem trinket) {
+                                if (stack.isEmpty()) continue;
+                                if (stack.getItem() instanceof TrinketItem trinket) {
                                     SlotReference ref = new SlotReference(trinketInventory, i);
                                     UUID uuid = SlotAttributes.getUuid(ref);
                                     Multimap<Attribute, AttributeModifier> modifiers = trinket.getModifiers(stack, ref, entity, uuid);
                                     ModifierSource<?> src = new ModifierSource.ItemModifierSource(stack);
                                     modifiers.values().forEach(m -> map.accept(m, src));
                                 }
+                                if (FabricLoader.getInstance().isModLoaded("artifacts")) artifactsSupport(stack, map);
                             }
                         });
                     });
@@ -47,6 +51,14 @@ public class TrinketsCompat {
                 return 20;
             }
         });
+    }
 
+    private static void artifactsSupport(ItemStack stack, BiConsumer<AttributeModifier, ModifierSource<?>> map) {
+        if (stack.getItem() instanceof AttributeModifyingItem item) {
+            AttributeModifier modifier = ((ZenithArtifactsItem) item).zenithAttributes$getModifier();
+            if (modifier == null) return;
+            ModifierSource<?> src = new ModifierSource.ItemModifierSource(stack);
+            map.accept(modifier, src);
+        }
     }
 }
