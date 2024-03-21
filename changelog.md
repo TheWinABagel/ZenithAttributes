@@ -1,4 +1,10 @@
 
+
+## 0.2.2
+* Update to be in line with AttributesLib 1.3.3
+  * Adds a proper config
+* Add support for Artifacts (did not show up in attributes screen before)
+
 ## 0.2.1
 * Move client only mixins to properly only run on the client
 
