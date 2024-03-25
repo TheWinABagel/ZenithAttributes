@@ -1,11 +1,21 @@
 {
     "item.modifiers.both_hands": "Quando segurado:",
 
+    "zenith_attributes.adv.base": "[Entidade: %s | Item: %s]",
+    "zenith_attributes.adv.sharpness_bonus": "[Afiação: +%s]",
+
 	"zenith_attributes.value.flat": "%s",
 	"zenith_attributes.value.percent": "%s%%",
 
+	"zenith_attributes.value.boolean.enabled": "Habilitado",
+	"zenith_attributes.value.boolean.disabled": "Desabilitado",
+	"zenith_attributes.value.boolean.enable": "Habilita",
+	"zenith_attributes.value.boolean.force_disable": "Desabilitado à força",
+	"zenith_attributes.value.boolean.invalid": "Inválido",
+
     "zenith_attributes.modifier.plus": "+%s %s",
     "zenith_attributes.modifier.take": "-%s %s",
+	"zenith_attributes.modifier.bool": "%s %s",
 
 	"zenith_attributes.gui.attributes": "Atributos",
 	"zenith_attributes.gui.base": "Base: %s",
@@ -90,8 +100,14 @@
 	"zenith_attributes:prot_shred": "Fragmentação de proteção",
 	"zenith_attributes:prot_shred.desc": "Porcentagem de redução ao total de pontos de proteção do alvo.",
 
-	"zenith_attributes:dodge_chance": "Chance de esquiva",
-	"zenith_attributes:dodge_chance.desc": "Chance de desviar de um ataque corpo a corpo ou de um projétil.",
+	"zenith_attributes:dodge_chance": "Dodge Chance",
+	"zenith_attributes:dodge_chance.desc": "Chance to dodge a melee attack or a projectile.",
+
+	"zenith_attributes:elytra_flight": "Elytra Flight",
+	"zenith_attributes:elytra_flight.desc": "If you can fly as if wearing an Elytra.",
+
+	"zenith_attributes:creative_flight": "Creative Flight",
+	"zenith_attributes:creative_flight.desc": "If you can fly as if in Creative Mode.",
 
     "comment_id": "MobFx - descriptions are duplicated for JEED support.",
 
@@ -114,10 +130,54 @@
     "effect.zenith_attributes.bleeding": "Sangramento",
     "effect.zenith_attributes.bleeding.desc": "Inflige danos a cada dois segundos.",
     "effect.zenith_attributes.bleeding.description": "Inflige danos a cada dois segundos.",
-    "death.attack.zenith_attributes.bleeding": "%s sangrou até a morte.",
-
+    
     "effect.zenith_attributes.detonation": "Detonação flamejante",
-    "effect.zenith_attributes.detonation.desc": "Ao expirar, inflige danos com base nos ticks de fogo restantes.",
-    "effect.zenith_attributes.detonation.description": "Ao expirar, inflige danos com base nos ticks de fogo restantes.",
-    "death.attack.zenith_attributes.detonation": "%s foi detonado por uma chama."
+    "effect.zenith_attributes.detonation.desc": "Ao expirar, inflige dano com base nos ticks de fogo restantes.",
+	"effect.zenith_attributes.detonation.description": "Ao expirar, inflige dano com base nos ticks de fogo restantes.",
+
+	"effect.zenith_attributes.flying": "Voando",
+	"effect.zenith_attributes.flying.desc": "Concede voo do criativo.",
+	"effect.zenith_attributes.flying.description": "Conceder voo do criativo.",
+
+    "effect.minecraft.night_vision.desc": "Permite que você veja no escuro.",
+    "effect.minecraft.invisibility.desc": "Torna você invisível, exceto os equipamentos.",
+    "effect.minecraft.jump_boost.desc": "Aumenta a altura do salto.",
+    "effect.minecraft.fire_resistance.desc": "Torna você imune a dano de fogo.",
+    "effect.minecraft.water_breathing.desc": "Faz com que você não possa se afogar.",
+    "effect.minecraft.instant_health.desc": "Restaura instantaneamente um pouco da sua saúde.",
+    "effect.minecraft.instant_damage.desc": "Causa instantaneamente um pouco de dano mágico.",
+    "effect.minecraft.poison.desc": "Periodicamente inflige dano não letal.",
+    "effect.minecraft.regeneration.desc": "Faz com que você regenere a saúde ao longo do tempo.",
+
+    "comment_id": "Damage Sources",
+
+    "death.attack.zenith_attributes:bleeding": "%s sangrou até a morte.",
+    "death.attack.zenith_attributes:bleeding.item": "%1$s sangrou por %2$s de %3$s",
+    "death.attack.zenith_attributes:bleeding.player": "%1$s sangrou enquanto tentava escapar de %2$s",
+
+    "death.attack.zenith_attributes:detonation": "%1$s foi detonado pelas chamas",
+    "death.attack.zenith_attributes:detonation.item": "%1$s foi detonado pelas chamas",
+    "death.attack.zenith_attributes:detonation.player": "%1$s foi detonado pelas chamas",
+
+    "death.attack.zenith_attributes:current_hp_damage": "%1$s foi abatido",
+    "death.attack.zenith_attributes:current_hp_damage.item": "%1$s foi abatido por %2$s com %3$s",
+    "death.attack.zenith_attributes:current_hp_damage.player": "%1$s foi abatido enquanto lutava com %2$s",
+
+    "death.attack.zenith_attributes:fire_damage": "%1$sfoi queimado até a morte",
+    "death.attack.zenith_attributes:fire_damage.item": "%1$s foi queimado até a morte por %2$s com %3$s",
+    "death.attack.zenith_attributes:fire_damage.player": "%1$s foi queimado até a morte enquanto lutava com %2$s",
+
+    "death.attack.zenith_attributes:cold_damage": "%1$s was frozen to death",
+    "death.attack.zenith_attributes:cold_damage.item": "%1$s was frozen to death by %2$s using %3$s",
+    "death.attack.zenith_attributes:cold_damage.player": "%1$s was frozen to death whilst fighting %2$s",
+
+	"comment_id": "Temporary localization hell",
+	"porting_lib.swim_speed": "Velocidade de natação",
+	"porting_lib.name_tag_distance": "Distância de renderização de etiqueta",
+	"porting_lib.entity_gravity": "Gravidade",
+	"porting_lib.step_height": "Altura do passo",
+	"porting_lib.swimSpeed": "Velocidade de natação",
+	"porting_lib.nameTagDistance": "Distância de renderização de etiqueta",
+	"porting_lib.entityGravity": "Gravidade",
+	"porting_lib.stepHeight": "Altura do passo"
 }
