@@ -1,6 +1,7 @@
 package dev.shadowsoffire.attributeslib.compat;
 
-import artifacts.item.wearable.AttributeModifyingItem;
+import artifacts.item.wearable.ArtifactAttributeModifier;
+import artifacts.item.wearable.WearableArtifactItem;
 import com.google.common.collect.Multimap;
 import dev.emi.trinkets.api.SlotAttributes;
 import dev.emi.trinkets.api.SlotReference;
@@ -8,6 +9,7 @@ import dev.emi.trinkets.api.TrinketItem;
 import dev.emi.trinkets.api.TrinketsApi;
 import dev.shadowsoffire.attributeslib.client.ModifierSource;
 import dev.shadowsoffire.attributeslib.client.ModifierSourceType;
+import dev.shadowsoffire.attributeslib.mixin.compat.artifacts.present.ArtifactAttributeModifierMixin;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.Attribute;
@@ -54,11 +56,11 @@ public class TrinketsCompat {
     }
 
     private static void artifactsSupport(ItemStack stack, BiConsumer<AttributeModifier, ModifierSource<?>> map) {
-        if (stack.getItem() instanceof AttributeModifyingItem item) {
-            AttributeModifier modifier = ((ZenithArtifactsItem) item).zenithAttributes$getModifier();
-            if (modifier == null) return;
-            ModifierSource<?> src = new ModifierSource.ItemModifierSource(stack);
-            map.accept(modifier, src);
+        if (stack.getItem() instanceof WearableArtifactItem item && !item.isCosmetic()) {
+			for (ArtifactAttributeModifier modifier : item.getAttributeModifiers()) {
+				ModifierSource<?> src = new ModifierSource.ItemModifierSource(stack);
+				map.accept(((ArtifactAttributeModifierMixin) modifier).invokeCreateModifier(), src);
+			}
         }
     }
 }

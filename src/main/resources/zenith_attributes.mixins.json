@@ -13,7 +13,7 @@
     "PotionUtilsMixin",
     "ProjectileMixin",
     "accessors.AttributeSupplierBuilderAccessor",
-    "compat.artifacts.present.AttributeModifyingItemMixin"
+    "compat.artifacts.present.ArtifactAttributeModifierMixin"
   ],
   "injectors": {
     "defaultRequire": 1
