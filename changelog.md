@@ -1,5 +1,12 @@
 
 
+## 0.2.3
+* Fix REI exclusion zones
+* Update PT-BR (t0piy)
+* Fix various crit issues (Partonetrain)
+* Fix artifacts compat (ENDERZOMBI102)
+* Thank you to all who PRd fixes!
+
 ## 0.2.2
 * Update to be in line with AttributesLib 1.3.3
   * Adds a proper config
