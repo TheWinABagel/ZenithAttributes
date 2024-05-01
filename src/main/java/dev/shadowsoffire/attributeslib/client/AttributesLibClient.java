@@ -12,8 +12,10 @@ import dev.shadowsoffire.attributeslib.api.client.AddAttributeTooltipsEvent;
 import dev.shadowsoffire.attributeslib.api.client.GatherEffectScreenTooltipsEvent;
 import dev.shadowsoffire.attributeslib.api.client.GatherSkippedAttributeTooltipsEvent;
 import dev.shadowsoffire.attributeslib.api.client.ItemTooltipCallbackWithPlayer;
+import dev.shadowsoffire.attributeslib.packet.CritParticleMessage;
 import net.fabricmc.api.ClientModInitializer;
 import net.fabricmc.fabric.api.client.item.v1.ItemTooltipCallback;
+import net.fabricmc.fabric.api.client.networking.v1.ClientPlayNetworking;
 import net.fabricmc.fabric.api.client.particle.v1.ParticleFactoryRegistry;
 import net.fabricmc.fabric.api.resource.ResourceManagerHelper;
 import net.minecraft.ChatFormatting;
@@ -55,6 +57,15 @@ public class AttributesLibClient implements ClientModInitializer {
 
         ResourceManagerHelper.get(PackType.SERVER_DATA).registerReloadListener(ALConfig.makeReloader());
         ParticleFactoryRegistry.getInstance().register(ALObjects.Particles.APOTH_CRIT, CritParticle.Provider::new);
+
+        ClientPlayNetworking.registerGlobalReceiver(CritParticleMessage.ID, (client, handler, buf, responseSender) -> {
+            int id = buf.readInt();
+
+            client.execute(() -> {
+                CritParticleMessage.apothCrit(id);
+                //AttributesLib.LOGGER.info("Packet received");
+            });
+        });
     }
 
     public void tooltips() {

@@ -208,12 +208,11 @@ public class AttributeEvents {
             float critDmg = (float) attacker.getAttributeValue(AdditionalEntityAttributes.CRITICAL_BONUS_DAMAGE);
 
             RandomSource rand = damaged.getRandom();
-
             float critMult = 1.0F;
 
             // Roll for crits. Each overcrit reduces the effectiveness by 15%
             // We stop rolling when crit chance fails or the crit damage would reduce the total damage dealt.
-            while (rand.nextFloat() <= critChance && critDmg > 1.0F) {
+            while (rand.nextFloat() <= critChance && critDmg > 0.0F) {
                 critChance--;
                 critMult *= critDmg;
                 critDmg *= 0.85F;
