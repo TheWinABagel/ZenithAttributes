@@ -46,5 +46,8 @@
 	"suggests": {
 		"zenith": "*"
 	},
+    "breaks": {
+        "artifacts": "<9.4.0"
+    },
 	"accessWidener": "zenith_attributes.aw"
 }

@@ -21,7 +21,7 @@ public class Plugin implements IMixinConfigPlugin {
 
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.equals("dev.shadowsoffire.attributeslib.mixin.compat.artifacts.present.AttributeModifyingItemMixin") && !FabricLoader.getInstance().isModLoaded("artifacts")) {
+        if (mixinClassName.equals("dev.shadowsoffire.attributeslib.mixin.compat.artifacts.present.ArtifactAttributeModifierMixin") && !FabricLoader.getInstance().isModLoaded("artifacts")) {
             return false;
         }
         return true;

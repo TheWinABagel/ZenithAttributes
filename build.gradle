@@ -82,7 +82,7 @@ dependencies {
 	modCompileOnly "curse.maven:conjuring-422310:${project.conjuring_id}"
 
 	//Artifacts (They register attributes to their items that work differently than normal)
-	modCompileOnly ("curse.maven:artifacts-312353:5174587")
+	modCompileOnly ("curse.maven:artifacts-312353:5234846")
 }
 
 loom {
