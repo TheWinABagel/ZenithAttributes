@@ -26,6 +26,12 @@
 		],
 		"cardinal-components": [
 			"dev.shadowsoffire.attributeslib.components.ZenithAttributesComponents"
+		],
+		"emi": [
+			"dev.shadowsoffire.attributeslib.compat.EMICompat"
+		],
+		"rei_client": [
+			"dev.shadowsoffire.attributeslib.compat.REICompat"
 		]
 	},
 	"custom": {
@@ -41,7 +47,7 @@
 		"minecraft": "~1.20.1",
 		"java": ">=17",
 		"fabric-api": "*",
-		"fakerlib": ">=0.0.7"
+		"fakerlib": ">=0.1.3"
 	},
 	"suggests": {
 		"zenith": "*"

@@ -23,6 +23,8 @@
     "accessors.AbstractContainerScreenAccessor",
     "accessors.GuiGraphicsAccessor",
     "client.AbstractContainerScreenMixin",
-    "client.ScreenMixin"
+    "client.ScreenMixin",
+    "compat.roughlyenoughitems.present.DefaultPotionEffectExclusionZonesMixin",
+    "compat.roughlyenoughitems.present.EffectRenderingInventoryScreenMixinREI"
   ]
 }
