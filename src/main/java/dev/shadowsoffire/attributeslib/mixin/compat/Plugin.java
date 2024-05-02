@@ -24,6 +24,10 @@ public class Plugin implements IMixinConfigPlugin {
         if (mixinClassName.equals("dev.shadowsoffire.attributeslib.mixin.compat.artifacts.present.ArtifactAttributeModifierMixin") && !FabricLoader.getInstance().isModLoaded("artifacts")) {
             return false;
         }
+        boolean isREICompat = mixinClassName.equals("dev.shadowsoffire.attributeslib.mixin.compat.roughlyenoughitems.present.DefaultPotionEffectExclusionZonesMixin") || mixinClassName.equals("dev.shadowsoffire.attributeslib.mixin.compat.roughlyenoughitems.present.EffectRenderingInventoryScreenMixinREI");
+        if (!FabricLoader.getInstance().isModLoaded("roughlyenoughitems") && isREICompat) {
+            return false;
+        }
         return true;
     }
 

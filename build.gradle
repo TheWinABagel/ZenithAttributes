@@ -39,6 +39,7 @@ dependencies {
 	modApi(include("io.github.fabricators_of_create.Porting-Lib:attributes:${project.port_lib_version}"))
 	modApi(include("io.github.fabricators_of_create.Porting-Lib:entity:${project.port_lib_version}"))
 	modApi(include("io.github.fabricators_of_create.Porting-Lib:extensions:${project.port_lib_version}"))
+	modApi(include("io.github.fabricators_of_create.Porting-Lib:common:${project.port_lib_version}"))
 
 	// Fakerlib
 //	modImplementation("dev.bagel.fakerlib:FakerLib:${project.fakerlib_version}")

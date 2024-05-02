@@ -13,6 +13,7 @@
     "PotionUtilsMixin",
     "ProjectileMixin",
     "accessors.AttributeSupplierBuilderAccessor",
+    "compat.BlockStateExtensionMixin",
     "compat.artifacts.present.ArtifactAttributeModifierMixin"
   ],
   "injectors": {
