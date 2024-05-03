@@ -1,5 +1,8 @@
 
 
+## 0.2.4
+* Fix crit math
+
 ## 0.2.3
 * Fix REI exclusion zones
 * Update PT-BR (t0piy)
