@@ -205,7 +205,7 @@ public class AttributeEvents {
             if (attacker == null) return amount;
 
             double critChance = attacker.getAttributeValue(ALObjects.Attributes.CRIT_CHANCE);
-            float critDmg = (float) attacker.getAttributeValue(AdditionalEntityAttributes.CRITICAL_BONUS_DAMAGE);
+            float critDmg =  1 + (float) attacker.getAttributeValue(AdditionalEntityAttributes.CRITICAL_BONUS_DAMAGE);
 
             RandomSource rand = damaged.getRandom();
             float critMult = 1.0F;

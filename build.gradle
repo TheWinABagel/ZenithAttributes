@@ -51,7 +51,8 @@ dependencies {
 	modImplementation(include("io.github.ladysnake:PlayerAbilityLib:${project.pal_version}"))
 
 	// Trinkets
-	modCompileOnly(modRuntimeOnly"dev.emi:trinkets:${project.trinkets_version}")
+	modCompileOnly("dev.emi:trinkets:${project.trinkets_version}")
+//	modRuntimeOnly("dev.emi:trinkets:${project.trinkets_version}")
 
 	// Reach entity attributes
 	modApi(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}"))
