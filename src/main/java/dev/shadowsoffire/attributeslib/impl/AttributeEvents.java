@@ -201,7 +201,7 @@ public class AttributeEvents {
 
     public static void apothCriticalStrike() {
         LivingEntityEvents.HURT.register((source, damaged, amount) -> {
-            LivingEntity attacker = source.getEntity() instanceof LivingEntity le ? le : null;
+            LivingEntity attacker = source.getEntity() instanceof LivingEntity le && !le.level().isClientSide ? le : null;
             if (attacker == null) return amount;
 
             double critChance = attacker.getAttributeValue(ALObjects.Attributes.CRIT_CHANCE);
@@ -212,10 +212,12 @@ public class AttributeEvents {
 
             // Roll for crits. Each overcrit reduces the effectiveness by 15%
             // We stop rolling when crit chance fails or the crit damage would reduce the total damage dealt.
-            while (rand.nextFloat() <= critChance && critDmg > 0.0F) {
+            //AttributesLib.LOGGER.info("Outer: critChance " + critChance + " critMult " + critMult + " critDmg " + critDmg);
+            while (rand.nextFloat() <= critChance && critDmg > 1.0F) {
                 critChance--;
                 critMult *= critDmg;
                 critDmg *= 0.85F;
+                //AttributesLib.LOGGER.info("Loop: critChance " + critChance + " critMult " + critMult + " critDmg " + critDmg);
             }
 
             amount *= critMult;
