@@ -23,7 +23,6 @@ import net.minecraft.client.gui.screens.Screen;
 import net.minecraft.client.particle.CritParticle;
 import net.minecraft.client.resources.language.I18n;
 import net.minecraft.core.registries.BuiltInRegistries;
-import net.minecraft.network.chat.CommonComponents;
 import net.minecraft.network.chat.Component;
 import net.minecraft.network.chat.MutableComponent;
 import net.minecraft.network.chat.TextColor;
@@ -50,7 +49,6 @@ public class AttributesLibClient implements ClientModInitializer {
 
     @Override
     public void onInitializeClient() {
-        //    addAttribComponent(); Done via mixin
         tooltips();
         effectGuiTooltips();
         potionTooltips();
@@ -63,7 +61,6 @@ public class AttributesLibClient implements ClientModInitializer {
 
             client.execute(() -> {
                 CritParticleMessage.apothCrit(id);
-                //AttributesLib.LOGGER.info("Packet received");
             });
         });
     }
@@ -97,7 +94,7 @@ public class AttributesLibClient implements ClientModInitializer {
 
     }
 
-    @SuppressWarnings({"deprecation", "NoTranslation"})
+    @SuppressWarnings({"NoTranslation"})
     public void effectGuiTooltips() {
         GatherEffectScreenTooltipsEvent.GATHER_TOOLTIPS.register((e) -> {
             List<Component> tooltips = e.getTooltip();
@@ -116,10 +113,10 @@ public class AttributesLibClient implements ClientModInitializer {
 
             String key = effect.getDescriptionId() + ".desc";
             if (I18n.exists(key)) {
-                tooltips.add(Component.translatable(key).withStyle(ChatFormatting.YELLOW, ChatFormatting.ITALIC));
+                tooltips.add(Component.translatable(key).withStyle(ChatFormatting.DARK_GRAY));
             }
             else if (AttributesLib.getTooltipFlag().isAdvanced() && effect.getAttributeModifiers().isEmpty()) {
-                tooltips.add(Component.translatable(key).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
+                tooltips.add(Component.translatable(key).withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
             }
 
             List<Pair<Attribute, AttributeModifier>> list = Lists.newArrayList();
@@ -133,7 +130,6 @@ public class AttributesLibClient implements ClientModInitializer {
             }
 
             if (!list.isEmpty()) {
-                tooltips.add(CommonComponents.EMPTY);
                 for (Pair<Attribute, AttributeModifier> pair : list) {
                     tooltips.add(IFormattableAttribute.toComponent(pair.getFirst(), pair.getSecond(), AttributesLib.getTooltipFlag()));
                 }
@@ -152,12 +148,10 @@ public class AttributesLibClient implements ClientModInitializer {
                     MobEffect effect = effects.get(0).getEffect();
                     String key = effect.getDescriptionId() + ".desc";
                     if (I18n.exists(key)) {
-                        tooltips.add(2, Component.translatable(key).withStyle(ChatFormatting.YELLOW, ChatFormatting.ITALIC));
-                        tooltips.add(3, CommonComponents.EMPTY);
+                        tooltips.add(2, Component.translatable(key).withStyle(ChatFormatting.DARK_GRAY));
                     }
                     else if (context.isAdvanced() && effect.getAttributeModifiers().isEmpty()) {
-                        tooltips.add(2, Component.translatable(key).withStyle(ChatFormatting.GRAY, ChatFormatting.ITALIC));
-                        tooltips.add(3, CommonComponents.EMPTY);
+                        tooltips.add(2, Component.translatable(key).withStyle(ChatFormatting.DARK_GRAY, ChatFormatting.ITALIC));
                     }
                 }
             }
@@ -318,16 +312,4 @@ public class AttributesLibClient implements ClientModInitializer {
             }
         }
     }
-/*
-    public static class ApothCritParticle extends CritParticle {
-
-        public ApothCritParticle(SimpleParticleType type, ClientLevel pLevel, double pX, double pY, double pZ, double pXSpeed, double pYSpeed, double pZSpeed) {
-            super(pLevel, pX, pY, pZ, pXSpeed, pYSpeed, pZSpeed);
-            this.bCol = 1F;
-            this.rCol = 0.3F;
-            this.gCol = 0.8F;
-        }
-
-    }*/
-
 }
