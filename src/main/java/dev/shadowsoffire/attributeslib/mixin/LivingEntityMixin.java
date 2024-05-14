@@ -54,7 +54,7 @@ public abstract class LivingEntityMixin extends Entity {
      * @param damage The initial damage amount
      */
     @Redirect(at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
-    public float zenith$sunderingApplyEffect(float value, float max, DamageSource source, float damage) {
+    public float zenith_attributes$sunderingApplyEffect(float value, float max, DamageSource source, float damage) {
         if (this.hasEffect(ALObjects.MobEffects.SUNDERING) && !source.is(DamageTypeTags.BYPASSES_RESISTANCE)) {
             int level = this.getEffect(ALObjects.MobEffects.SUNDERING).getAmplifier() + 1;
             value += damage * level * 0.2F;
@@ -67,7 +67,7 @@ public abstract class LivingEntityMixin extends Entity {
      * @reason Used to enter an if-condition so the above mixin always triggers.
      */
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
-    public boolean zenith$sunderingHasEffect(LivingEntity ths, MobEffect effect) {
+    public boolean zenith_attributes$sunderingHasEffect(LivingEntity ths, MobEffect effect) {
         return true;
     }
 
@@ -76,17 +76,17 @@ public abstract class LivingEntityMixin extends Entity {
      * @reason Used to prevent an NPE since we're faking true on hasEffect
      */
     @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffectInstance;getAmplifier()I"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
-    public int zenith$sunderingGetAmplifier(@Nullable MobEffectInstance inst) {
+    public int zenith_attributes$sunderingGetAmplifier(@Nullable MobEffectInstance inst) {
         return inst == null ? -1 : inst.getAmplifier();
     }
 
     @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), method = "getDamageAfterArmorAbsorb", require = 1)
-    public float zenith_applyArmorPen(float amount, DamageSource src) {
+    public float zenith_attributes$applyArmorPen(float amount, DamageSource src) {
         return ALCombatRules.getDamageAfterArmor((LivingEntity) (Object) this, src, amount,((LivingEntity)(Object) this).getArmorValue(), (float) ((LivingEntity)(Object) this).getAttributeValue(Attributes.ARMOR_TOUGHNESS));
     }
 
     @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterMagicAbsorb(FF)F"), method = "getDamageAfterMagicAbsorb", require = 1)
-    public float zenith_applyProtPen(float amount, DamageSource src) {
+    public float zenith_attributes$applyProtPen(float amount, DamageSource src) {
         return ALCombatRules.getDamageAfterProtection((LivingEntity) (Object) this, src, amount, EnchantmentHelper.getDamageProtection(((LivingEntity)(Object) this).getArmorSlots(), src));
     }
 
@@ -97,7 +97,7 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Inject(method = "updateUsingItem", at = @At("HEAD"))
-    private void useItemEvent(ItemStack usingItem, CallbackInfo ci) {
+    private void zenith_attributes$useItemEvent(ItemStack usingItem, CallbackInfo ci) {
         if (!usingItem.isEmpty())
             this.useItemRemaining = AttributeEvents.drawSpeed((LivingEntity) (Object) this, usingItem, this.useItemRemaining);
     }
@@ -108,7 +108,7 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @Inject(method = "createLivingAttributes", at = @At("RETURN"))
-    private static void zenith_attributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
+    private static void zenith_attributes$customAttributes(CallbackInfoReturnable<AttributeSupplier.Builder> cir) {
         cir.getReturnValue().add(ALObjects.Attributes.DRAW_SPEED)
         .add(ALObjects.Attributes.CRIT_CHANCE)
         .add(ALObjects.Attributes.COLD_DAMAGE)
