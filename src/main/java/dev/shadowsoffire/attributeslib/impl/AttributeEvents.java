@@ -76,12 +76,12 @@ public class AttributeEvents {
      */
     public static void elytra() {
         EntityElytraEvents.CUSTOM.register((entity, tickElytra) -> {
-            if (entity instanceof Player p) {
-                return p.getAttributeValue(ALObjects.Attributes.ELYTRA_FLIGHT) > 0;
+            ItemStack chestplate = entity.getItemBySlot(EquipmentSlot.CHEST);
+            if (chestplate.getItem() instanceof ElytraItem) {
+                return false;
             }
-            return false;
+            return entity.getAttributeValue(ALObjects.Attributes.ELYTRA_FLIGHT) > 0;
         });
-
     }
 
     /**
