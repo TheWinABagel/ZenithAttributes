@@ -1,13 +1,8 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
-import com.google.common.collect.Multimap;
-import dev.shadowsoffire.attributeslib.api.ItemAttributeModifierEvent;
 import dev.shadowsoffire.attributeslib.api.client.ItemTooltipCallbackWithPlayer;
 import net.fabricmc.loader.api.FabricLoader;
 import net.minecraft.network.chat.Component;
-import net.minecraft.world.entity.EquipmentSlot;
-import net.minecraft.world.entity.ai.attributes.Attribute;
-import net.minecraft.world.entity.ai.attributes.AttributeModifier;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
@@ -43,13 +38,6 @@ public class ItemStackMixin {
     @Inject(method = "getTooltipLines", at = @At("RETURN"))
     private void zenith_attributes$getTooltip(Player entity, TooltipFlag tooltipContext, CallbackInfoReturnable<List<Component>> info) {
         ItemTooltipCallbackWithPlayer.EVENT.invoker().getTooltip((ItemStack) (Object) this, tooltipContext, info.getReturnValue(), entity);
-    }
-
-    @Inject(method = "getAttributeModifiers", at = @At("RETURN"), cancellable = true)
-    private void zenith_attributes$attributeModifierEvent(EquipmentSlot slot, CallbackInfoReturnable<Multimap<Attribute, AttributeModifier>> cir) {
-        ItemAttributeModifierEvent.AttributeModifierEvent event = new ItemAttributeModifierEvent.AttributeModifierEvent(((ItemStack) (Object) this), slot, cir.getReturnValue());
-        ItemAttributeModifierEvent.GATHER_TOOLTIPS.invoker().gatherTooltips(event);
-        cir.setReturnValue(event.nonChangableModifiers);
     }
 
     @Unique

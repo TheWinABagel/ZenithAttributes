@@ -4,7 +4,8 @@ import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import dev.shadowsoffire.attributeslib.api.ALCombatRules;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
-import dev.shadowsoffire.attributeslib.api.HealEvent;
+import dev.shadowsoffire.attributeslib.api.events.LivingHealEvent;
+import dev.shadowsoffire.attributeslib.api.events.LivingHurtEvent;
 import dev.shadowsoffire.attributeslib.impl.AttributeEvents;
 import net.minecraft.tags.DamageTypeTags;
 import net.minecraft.world.damagesource.DamageSource;
@@ -90,8 +91,8 @@ public abstract class LivingEntityMixin extends Entity {
     }
 
     @ModifyVariable(method = "heal", at = @At(value = "HEAD"), argsOnly = true)
-    private float healEvent(float value){
-        float amount = HealEvent.EVENT.invoker().onLivingHeal((LivingEntity) (Object) this, value);
+    private float zenith_attributes$healEvent(float value){
+        float amount = LivingHealEvent.EVENT.invoker().onLivingHeal((LivingEntity) (Object) this, value);
         return amount >= 0 ? amount : 0;
     }
 
@@ -99,6 +100,11 @@ public abstract class LivingEntityMixin extends Entity {
     private void useItemEvent(ItemStack usingItem, CallbackInfo ci) {
         if (!usingItem.isEmpty())
             this.useItemRemaining = AttributeEvents.drawSpeed((LivingEntity) (Object) this, usingItem, this.useItemRemaining);
+    }
+
+    @ModifyVariable(method = "hurt", at = @At("HEAD"), argsOnly = true)
+    private float zenith_attributes$onHurtEvent(float amount, DamageSource source, float amount2) {
+        return LivingHurtEvent.EVENT.invoker().onHurt(source, (LivingEntity) (Object) this, amount);
     }
 
     @Inject(method = "createLivingAttributes", at = @At("RETURN"))

@@ -5,7 +5,11 @@ import com.mojang.brigadier.builder.LiteralArgumentBuilder;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import dev.shadowsoffire.attributeslib.ALConfig;
 import dev.shadowsoffire.attributeslib.AttributesLib;
-import dev.shadowsoffire.attributeslib.api.*;
+import dev.shadowsoffire.attributeslib.api.ALObjects;
+import dev.shadowsoffire.attributeslib.api.AttributeHelper;
+import dev.shadowsoffire.attributeslib.api.IFormattableAttribute;
+import dev.shadowsoffire.attributeslib.api.events.LivingHealEvent;
+import dev.shadowsoffire.attributeslib.api.events.LivingHurtEvent;
 import dev.shadowsoffire.attributeslib.commands.ModifierCommand;
 import dev.shadowsoffire.attributeslib.compat.ModCompat;
 import dev.shadowsoffire.attributeslib.components.ZenithAttributesComponents;
@@ -14,11 +18,11 @@ import dev.shadowsoffire.attributeslib.util.AttributesUtil;
 import dev.shadowsoffire.attributeslib.util.FlyingAbility;
 import dev.shadowsoffire.placebo.events.ReloadableServerEvent;
 import io.github.fabricators_of_create.porting_lib.entity.events.EntityEvents;
-import io.github.fabricators_of_create.porting_lib.entity.events.LivingEntityEvents;
 import io.github.fabricators_of_create.porting_lib.entity.events.PlayerEvents;
 import net.fabricmc.fabric.api.command.v2.CommandRegistrationCallback;
 import net.fabricmc.fabric.api.entity.event.v1.EntityElytraEvents;
 import net.fabricmc.fabric.api.entity.event.v1.FabricElytraItem;
+import net.fabricmc.fabric.api.item.v1.ModifyItemAttributeModifiersCallback;
 import net.minecraft.commands.CommandSourceStack;
 import net.minecraft.commands.Commands;
 import net.minecraft.core.particles.ParticleTypes;
@@ -122,7 +126,7 @@ public class AttributeEvents {
      * This event handler manages the Life Steal and Overheal attributes.
      */
     public static void lifeStealOverheal() {
-        LivingEntityEvents.HURT.register((source, damaged, amount) -> {
+        LivingHurtEvent.EVENT.register((source, damaged, amount) -> {
             if (source.getDirectEntity() instanceof LivingEntity attacker && AttributesUtil.isPhysicalDamage(source)) {
                 float lifesteal = (float) attacker.getAttributeValue(ALObjects.Attributes.LIFE_STEAL);
                 float dmg = Math.min(amount, attacker.getHealth());
@@ -156,7 +160,7 @@ public class AttributeEvents {
      */
 
     public static void meleeDamageAttributes() {
-        LivingEntityEvents.HURT.register((source, damaged, amount) -> {
+        LivingHurtEvent.EVENT.register((source, damaged, amount) -> {
             if (damaged.level().isClientSide || damaged.isDeadOrDying()) return amount;
             if (noRecurse) return amount;
             noRecurse = true;
@@ -200,7 +204,7 @@ public class AttributeEvents {
      */
 
     public static void apothCriticalStrike() {
-        LivingEntityEvents.HURT.register((source, damaged, amount) -> {
+        LivingHurtEvent.EVENT.register((source, damaged, amount) -> {
             LivingEntity attacker = source.getEntity() instanceof LivingEntity le ? le : null;
             if (attacker == null) return amount;
 
@@ -243,7 +247,7 @@ public class AttributeEvents {
      */
 
     public static void heal() {
-        HealEvent.EVENT.register((entity, amount) -> {
+        LivingHealEvent.EVENT.register((entity, amount) -> {
             if (!(entity instanceof Player player)) return amount;
             float factor = (float) player.getAttributeValue(ALObjects.Attributes.HEALING_RECEIVED);
             return (amount * factor);
@@ -281,7 +285,7 @@ public class AttributeEvents {
      * Handles {link ALObjects#DODGE_CHANCE} for melee attacks.
      */
     public static void dodgeMelee() {
-        LivingEntityEvents.HURT.register((source, damaged, amount) -> {
+        LivingHurtEvent.EVENT.register((source, damaged, amount) -> {
             if (damaged.level().isClientSide) return amount;
             Entity attacker = source.getDirectEntity();
             if (attacker instanceof LivingEntity) {
@@ -336,18 +340,18 @@ public class AttributeEvents {
      */
 
     public static void affixModifiers() {
-        ItemAttributeModifierEvent.GATHER_TOOLTIPS.register(e -> {
-            boolean hasBaseAD = e.nonChangableModifiers.get(Attributes.ATTACK_DAMAGE).stream().filter(m -> ((IFormattableAttribute) Attributes.ATTACK_DAMAGE).getBaseUUID().equals(m.getId())).findAny().isPresent();
+        ModifyItemAttributeModifiersCallback.EVENT.register((stack, slot, attributeModifiers) -> {
+            boolean hasBaseAD = attributeModifiers.get(Attributes.ATTACK_DAMAGE).stream().filter(m -> ((IFormattableAttribute) Attributes.ATTACK_DAMAGE).getBaseUUID().equals(m.getId())).findAny().isPresent();
             if (hasBaseAD) {
                 boolean hasBaseAR = false;
-                if (e.nonChangableModifiers.containsKey(ReachEntityAttributes.REACH))
-                    hasBaseAR = e.nonChangableModifiers.get(ReachEntityAttributes.REACH).stream().anyMatch(m -> Objects.equals(((IFormattableAttribute) ReachEntityAttributes.REACH).getBaseUUID(), m.getId()));
+                if (attributeModifiers.containsKey(ReachEntityAttributes.REACH))
+                    hasBaseAR = attributeModifiers.get(ReachEntityAttributes.REACH).stream().anyMatch(m -> Objects.equals(((IFormattableAttribute) ReachEntityAttributes.REACH).getBaseUUID(), m.getId()));
                 if (!hasBaseAR) {
-                    e.addModifier(ReachEntityAttributes.REACH, new AttributeModifier(AttributeHelper.BASE_ENTITY_REACH, () -> "zenith_attributes:fake_base_range", 0, Operation.ADDITION));
+                    attributeModifiers.put(ReachEntityAttributes.REACH, new AttributeModifier(AttributeHelper.BASE_ENTITY_REACH, () -> "zenith_attributes:fake_base_range", 0, Operation.ADDITION));
                 }
             }
-            if (e.slot == EquipmentSlot.CHEST && (e.stack.getItem() instanceof FabricElytraItem || e.stack.getItem() instanceof ElytraItem) && !e.nonChangableModifiers.containsKey(ALObjects.Attributes.ELYTRA_FLIGHT)) {
-                e.addModifier(ALObjects.Attributes.ELYTRA_FLIGHT, new AttributeModifier(AttributeHelper.ELYTRA_FLIGHT_UUID, () -> "zenith_attributes:elytra_item_flight", 1, Operation.ADDITION));
+            if (slot == EquipmentSlot.CHEST && (stack.getItem() instanceof FabricElytraItem || stack.getItem() instanceof ElytraItem) && !attributeModifiers.containsKey(ALObjects.Attributes.ELYTRA_FLIGHT)) {
+                attributeModifiers.put(ALObjects.Attributes.ELYTRA_FLIGHT, new AttributeModifier(AttributeHelper.ELYTRA_FLIGHT_UUID, () -> "zenith_attributes:elytra_item_flight", 1, Operation.ADDITION));
             }
         });
     }
