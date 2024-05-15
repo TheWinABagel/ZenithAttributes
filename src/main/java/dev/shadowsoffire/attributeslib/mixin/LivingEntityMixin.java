@@ -2,6 +2,7 @@ package dev.shadowsoffire.attributeslib.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
+import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.ALCombatRules;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
 import dev.shadowsoffire.attributeslib.api.HealEvent;
@@ -81,6 +82,7 @@ public abstract class LivingEntityMixin extends Entity {
 
     @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), method = "getDamageAfterArmorAbsorb", require = 1)
     public float zenith_applyArmorPen(float amount, DamageSource src) {
+//        AttributesLib.LOGGER.info("LivingEntityMixin#zenith_applyArmorPen was passed " + amount);
         return ALCombatRules.getDamageAfterArmor((LivingEntity) (Object) this, src, amount,((LivingEntity)(Object) this).getArmorValue(), (float) ((LivingEntity)(Object) this).getAttributeValue(Attributes.ARMOR_TOUGHNESS));
     }
 

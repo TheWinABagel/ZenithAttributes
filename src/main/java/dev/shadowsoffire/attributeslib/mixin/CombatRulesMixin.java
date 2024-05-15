@@ -26,7 +26,10 @@ public class CombatRulesMixin {
      */
     @Inject(method ="getDamageAfterAbsorb", at = @At("HEAD"), cancellable = true)
     private static void zenith_attributes$getDamageAfterAbsorb(float damage, float totalArmor, float toughnessAttribute, CallbackInfoReturnable<Float> cir) {
-        AttributesLib.LOGGER.trace("Invocation of CombatRules#getDamageAfterAbsorb is bypassing armor pen.");
-        cir.setReturnValue(damage * ALCombatRules.getArmorDamageReduction(damage, totalArmor));
+//        AttributesLib.LOGGER.info("Invocation of CombatRules#getDamageAfterAbsorb is bypassing armor pen."); //incorrect?
+//        AttributesLib.LOGGER.info("getDamageAfterAbsorb was passed " + damage);
+        float ret = damage; //* ALCombatRules.getArmorDamageReduction(damage, totalArmor);
+//        AttributesLib.LOGGER.info("getDamageAfterAbsorb returned " + ret);
+        cir.setReturnValue(ret);
     }
 }

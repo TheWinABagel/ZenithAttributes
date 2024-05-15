@@ -1,6 +1,7 @@
 package dev.shadowsoffire.attributeslib.api;
 
 import dev.shadowsoffire.attributeslib.ALConfig;
+import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.ALObjects.Attributes;
 import net.minecraft.world.damagesource.DamageSource;
 import net.minecraft.world.entity.LivingEntity;
@@ -75,6 +76,8 @@ public class ALCombatRules {
      * @return The modified damage value, after applying armor, accounting for the attacker's bypass.
      */
     public static float getDamageAfterArmor(LivingEntity target, DamageSource src, float amount, float armor, float toughness) {
+        AttributesLib.LOGGER.info("getDamageAfterArmor was passed " + amount);
+
         if (src.getEntity() instanceof LivingEntity attacker) {
             float shred = (float) attacker.getAttributeValue(Attributes.ARMOR_SHRED);
             float bypassResist = Math.min(toughness * 0.02F, 0.6F);
@@ -123,6 +126,7 @@ public class ALCombatRules {
      * @see #getDamageAfterArmor(LivingEntity, DamageSource, float, float, float)
      */
     public static float getArmorDamageReduction(float damage, float armor) {
+//        AttributesLib.LOGGER.info("getArmorDamageReduction was passed " + damage);
         float a = getAValue(damage);
         if (ALConfig.getArmorExpr().isPresent()) {
             return ALConfig.getArmorExpr().get().setVariable("a", new BigDecimal(a)).setVariable("damage", new BigDecimal(damage)).setVariable("armor", new BigDecimal(armor)).eval().floatValue();
