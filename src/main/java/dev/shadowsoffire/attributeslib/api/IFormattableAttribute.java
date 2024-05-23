@@ -67,6 +67,9 @@ public interface IFormattableAttribute {
      */
     default MutableComponent toComponent(AttributeModifier modif, TooltipFlag flag) {
         Attribute attr = this.ths();
+        if(attr == null){
+            return null;
+        }
         double value = modif.getAmount();
 
         MutableComponent comp;
@@ -193,7 +196,13 @@ public interface IFormattableAttribute {
      * Helper method to invoke {@link #toComponent(AttributeModifier, TooltipFlag)}.
      */
     public static MutableComponent toComponent(Attribute attr, AttributeModifier modif, TooltipFlag flag) {
-        return ((IFormattableAttribute) attr).toComponent(modif, flag);
+        if(attr != null){
+            return ((IFormattableAttribute) attr).toComponent(modif, flag);
+        }
+        else{
+            return null;
+        }
+
     }
 
     /**

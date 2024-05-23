@@ -254,8 +254,11 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
                     for (AttributeModifier modif : modifiers) {
                         if (modif.getAmount() != 0) {
                             Component comp = fAttr.toComponent(modif, AttributesLib.getTooltipFlag());
-                            var src = modifiersToSources.get(modif.getId());
-                            finalTooltip.add(new AttributeModifierComponent(src, comp, this.font, this.leftPos - 16));
+                            if(comp != null){
+                                var src = modifiersToSources.get(modif.getId());
+                                finalTooltip.add(new AttributeModifierComponent(src, comp, this.font, this.leftPos - 16));
+                            }
+
                         }
                     }
                     color = ChatFormatting.GRAY;

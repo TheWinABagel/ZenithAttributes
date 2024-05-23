@@ -76,7 +76,7 @@ public class ALCombatRules {
      * @return The modified damage value, after applying armor, accounting for the attacker's bypass.
      */
     public static float getDamageAfterArmor(LivingEntity target, DamageSource src, float amount, float armor, float toughness) {
-        AttributesLib.LOGGER.info("getDamageAfterArmor was passed " + amount);
+        //AttributesLib.LOGGER.info("getDamageAfterArmor was passed " + amount);
 
         if (src.getEntity() instanceof LivingEntity attacker) {
             float shred = (float) attacker.getAttributeValue(Attributes.ARMOR_SHRED);
