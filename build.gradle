@@ -57,9 +57,6 @@ dependencies {
 	// Reach entity attributes
 	modApi(include("com.jamieswhiteshirt:reach-entity-attributes:${project.reach_lib_version}"))
 
-	// Projectile Damage Attribute
-	modApi(include("maven.modrinth:projectile-damage-attribute:${project.projectile_damage}-fabric"))
-
 	// Additional Entity Attributes
 	modApi(include("maven.modrinth:AdditionalEntityAttributes:${project.additional_attributes}"))
 
