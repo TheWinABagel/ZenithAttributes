@@ -118,6 +118,7 @@ public abstract class LivingEntityMixin extends Entity {
         .add(ALObjects.Attributes.OVERHEAL)
         .add(ALObjects.Attributes.GHOST_HEALTH)
         .add(ALObjects.Attributes.MINING_SPEED)
+        .add(ALObjects.Attributes.ARROW_DAMAGE)
         .add(ALObjects.Attributes.ARROW_VELOCITY)
         .add(ALObjects.Attributes.HEALING_RECEIVED)
         .add(ALObjects.Attributes.ARMOR_PIERCE)

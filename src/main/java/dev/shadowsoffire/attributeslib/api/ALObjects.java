@@ -33,8 +33,7 @@ public class ALObjects {
         /**
          * Arrow Damage. Base value = (1.0) = 100% default arrow damage
          */
-        // Use EntityAttributes_ProjectileDamage.GENERIC_PROJECTILE_DAMAGE instead projectile_damage:generic
-        //public static final Attribute ARROW_DAMAGE = new RangedAttribute("zenith_attributes:arrow_damage", 1.0D, 0.0D, 10.0D).setSyncable(true);
+        public static final Attribute ARROW_DAMAGE = new RangedAttribute("zenith_attributes:arrow_damage", 1.0D, 0.0D, 10.0D).setSyncable(true);
 
         /**
          * Arrow Velocity. Base value = (1.0) = 100% default arrow velocity
@@ -150,7 +149,7 @@ public class ALObjects {
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("overheal"), OVERHEAL);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("ghost_health"), GHOST_HEALTH);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("mining_speed"), MINING_SPEED);
-            //Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("arrow_damage"), ARROW_DAMAGE);
+            Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("arrow_damage"), ARROW_DAMAGE);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("arrow_velocity"), ARROW_VELOCITY);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("healing_received"), HEALING_RECEIVED);
             Registry.register(BuiltInRegistries.ATTRIBUTE, AttributesLib.loc("armor_pierce"), ARMOR_PIERCE);
