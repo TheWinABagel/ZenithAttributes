@@ -36,7 +36,8 @@
 	},
 	"custom": {
 		"cardinal-components": [
-			"zenith_attributes:arrow_done"
+			"zenith_attributes:arrow_velocity_done",
+			"zenith_attributes:arrow_damage_done"
 		]
 	},
 	"mixins": [

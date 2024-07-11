@@ -255,17 +255,35 @@ public class AttributeEvents {
     }
 
     /**
-     * Handles arrow velocity
-     * Injected via @See ProjectileMixin
+     * Handles {@link ALObjects.Attributes#ARROW_DAMAGE}
+     * See AbstractArrowMixin
+     */
+    public static double modifyArrowDamage(AbstractArrow arrow, LivingEntity shooter, double baseDamage) {
+        if (ZenithAttributesComponents.ARROW_DAMAGE_DONE.get(arrow).getValue()) return baseDamage;
+
+        double arrowDamage = shooter.getAttributeValue(ALObjects.Attributes.ARROW_DAMAGE);
+        if (!Double.isNaN(arrowDamage)) {
+            baseDamage *= arrowDamage;
+        }
+
+        ZenithAttributesComponents.ARROW_DAMAGE_DONE.get(arrow).setValue(true);
+        return baseDamage;
+    }
+
+    /**
+     * Handles {@link ALObjects.Attributes#ARROW_VELOCITY}
+     * See ProjectileMixin
      */
     public static void modifyArrowVelocity(Args args, AbstractArrow arrow, float velocity) {
         if (arrow.level().isClientSide) return;
-        if (ZenithAttributesComponents.ARROW_DONE.get(arrow).getValue()) return;
+        if (ZenithAttributesComponents.ARROW_VELOCITY_DONE.get(arrow).getValue()) return;
         if (arrow.getOwner() instanceof LivingEntity le) {
-            if (Double.isNaN(le.getAttributeValue(ALObjects.Attributes.ARROW_VELOCITY))) return;
-            args.set(3, (float) (velocity * le.getAttributeValue(ALObjects.Attributes.ARROW_VELOCITY)));
+            double arrowVelocity = le.getAttributeValue(ALObjects.Attributes.ARROW_VELOCITY);
+            if (!Double.isNaN(arrowVelocity)) {
+                args.set(3, (float) (velocity * arrowVelocity));
+            }
         }
-        ZenithAttributesComponents.ARROW_DONE.get(arrow).setValue(true);
+        ZenithAttributesComponents.ARROW_VELOCITY_DONE.get(arrow).setValue(true);
     }
 
     /**
