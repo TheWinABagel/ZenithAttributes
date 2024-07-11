@@ -1,6 +1,5 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import dev.shadowsoffire.attributeslib.api.ALCombatRules;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
@@ -22,6 +21,7 @@ import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.Shadow;
+import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
@@ -80,31 +80,31 @@ public abstract class LivingEntityMixin extends Entity {
         return inst == null ? -1 : inst.getAmplifier();
     }
 
-    @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), method = "getDamageAfterArmorAbsorb", require = 1)
-    public float zenith_attributes$applyArmorPen(float amount, DamageSource src) {
-        return ALCombatRules.getDamageAfterArmor((LivingEntity) (Object) this, src, amount,((LivingEntity)(Object) this).getArmorValue(), (float) ((LivingEntity)(Object) this).getAttributeValue(Attributes.ARMOR_TOUGHNESS));
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), method = "getDamageAfterArmorAbsorb", require = 1)
+    public float zenith_attributes$applyArmorPenplyArmorPen(float amount, float armor, float toughness, DamageSource src, float amt2) {
+        return ALCombatRules.getDamageAfterArmor(ths(), src, amount,(ths()).getArmorValue(), (float) (ths()).getAttributeValue(Attributes.ARMOR_TOUGHNESS));
     }
 
-    @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterMagicAbsorb(FF)F"), method = "getDamageAfterMagicAbsorb", require = 1)
-    public float zenith_attributes$applyProtPen(float amount, DamageSource src) {
-        return ALCombatRules.getDamageAfterProtection((LivingEntity) (Object) this, src, amount, EnchantmentHelper.getDamageProtection(((LivingEntity)(Object) this).getArmorSlots(), src));
+    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterMagicAbsorb(FF)F"), method = "getDamageAfterMagicAbsorb", require = 1)
+    public float zenith_attributes$applyProtPen(float amount, float protPoints, DamageSource src, float amt2) {
+        return ALCombatRules.getDamageAfterProtection(ths(), src, amount, EnchantmentHelper.getDamageProtection((ths()).getArmorSlots(), src));
     }
 
     @ModifyVariable(method = "heal", at = @At(value = "HEAD"), argsOnly = true)
-    private float zenith_attributes$healEvent(float value){
-        float amount = LivingHealEvent.EVENT.invoker().onLivingHeal((LivingEntity) (Object) this, value);
+    private float zenith_attributes$onHealEvent(float value){
+        float amount = LivingHealEvent.EVENT.invoker().onLivingHeal(ths(), value);
         return amount >= 0 ? amount : 0;
     }
 
     @Inject(method = "updateUsingItem", at = @At("HEAD"))
-    private void zenith_attributes$useItemEvent(ItemStack usingItem, CallbackInfo ci) {
+    private void zenith_attributes$modifyDrawSpeed(ItemStack usingItem, CallbackInfo ci) {
         if (!usingItem.isEmpty())
-            this.useItemRemaining = AttributeEvents.drawSpeed((LivingEntity) (Object) this, usingItem, this.useItemRemaining);
+            this.useItemRemaining = AttributeEvents.drawSpeed(ths(), usingItem, this.useItemRemaining);
     }
 
     @ModifyVariable(method = "hurt", at = @At("HEAD"), argsOnly = true)
     private float zenith_attributes$onHurtEvent(float amount, DamageSource source, float amount2) {
-        return LivingHurtEvent.EVENT.invoker().onHurt(source, (LivingEntity) (Object) this, amount);
+        return LivingHurtEvent.EVENT.invoker().onLivingHurt(source, ths(), amount);
     }
 
     @Inject(method = "createLivingAttributes", at = @At("RETURN"))
@@ -131,4 +131,8 @@ public abstract class LivingEntityMixin extends Entity {
 
     }
 
+    @Unique
+    private LivingEntity ths() {
+        return (LivingEntity) (Object) this;
+    }
 }

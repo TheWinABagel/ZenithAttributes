@@ -19,16 +19,31 @@ public class Plugin implements IMixinConfigPlugin {
         return null;
     }
 
+    //lightly stolen from spectrum
     @Override
     public boolean shouldApplyMixin(String targetClassName, String mixinClassName) {
-        if (mixinClassName.equals("dev.shadowsoffire.attributeslib.mixin.compat.artifacts.present.ArtifactAttributeModifierMixin") && !FabricLoader.getInstance().isModLoaded("artifacts")) {
-            return false;
+        String COMPAT_PACKAGE_ROOT = Plugin.class.getPackageName(); // Shorthand getting the plugin package to ensure not making trouble with other mixins
+        String COMPAT_PRESENT_KEY = "present";
+        FabricLoader LOADER = FabricLoader.getInstance();
+
+        if (!mixinClassName.startsWith(COMPAT_PACKAGE_ROOT)) {
+            return true; // We do not meddle with the others' work
         }
-        boolean isREICompat = mixinClassName.equals("dev.shadowsoffire.attributeslib.mixin.compat.roughlyenoughitems.present.DefaultPotionEffectExclusionZonesMixin") || mixinClassName.equals("dev.shadowsoffire.attributeslib.mixin.compat.roughlyenoughitems.present.EffectRenderingInventoryScreenMixinREI");
-        if (!FabricLoader.getInstance().isModLoaded("roughlyenoughitems") && isREICompat) {
-            return false;
+        String[] compatRoot = COMPAT_PACKAGE_ROOT.split("\\.");
+        String[] mixinPath = mixinClassName.split("\\.");
+        // The id of the mod the mixin depends on
+        String compatModId = mixinPath[compatRoot.length];
+        if (compatModId.equals("other")) {
+            return true;
         }
-        return true;
+        // Whether the mixin is for when the mod is loaded or not
+        boolean isPresentMixin = mixinPath[compatRoot.length + 1].equals(COMPAT_PRESENT_KEY);
+
+        if (isPresentMixin) {
+            // We only load the mixin if the mod we want to be present is found
+            return LOADER.isModLoaded(compatModId);
+        }
+        return !LOADER.isModLoaded(compatModId);
     }
 
     @Override

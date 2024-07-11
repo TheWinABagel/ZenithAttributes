@@ -13,8 +13,8 @@
     "PotionUtilsMixin",
     "ProjectileMixin",
     "accessors.AttributeSupplierBuilderAccessor",
-    "compat.BlockStateExtensionMixin",
-    "compat.artifacts.present.ArtifactAttributeModifierMixin"
+    "compat.artifacts.present.ArtifactAttributeModifierMixin",
+    "compat.other.BlockStateExtensionMixin"
   ],
   "injectors": {
     "defaultRequire": 1

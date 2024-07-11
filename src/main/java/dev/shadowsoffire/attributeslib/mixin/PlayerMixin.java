@@ -28,6 +28,6 @@ public class PlayerMixin {
 
     @ModifyVariable(method = "hurt", at = @At("HEAD"), argsOnly = true)
     private float zenith_attributes$onHurt(float amount, DamageSource source, float amount2) {
-        return LivingHurtEvent.EVENT.invoker().onHurt(source, (LivingEntity) (Object) this, amount);
+        return LivingHurtEvent.EVENT.invoker().onLivingHurt(source, (LivingEntity) (Object) this, amount);
     }
 }

@@ -55,7 +55,6 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
     protected static float scrollOffset = 0;
     // Ditto.
     protected static boolean hideUnchanged = false;
-    protected static boolean swappedFromTrinkets = false;
 
     protected final InventoryScreen parent;
     protected final Player player;
