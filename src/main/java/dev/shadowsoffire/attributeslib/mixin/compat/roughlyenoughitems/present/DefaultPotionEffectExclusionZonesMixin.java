@@ -5,11 +5,13 @@ import me.shedaniel.rei.plugin.client.exclusionzones.DefaultPotionEffectExclusio
 import net.fabricmc.api.EnvType;
 import net.fabricmc.api.Environment;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(value = DefaultPotionEffectExclusionZones.class, remap = false)
+@Pseudo
 public class DefaultPotionEffectExclusionZonesMixin {
     @ModifyVariable(method = "provide(Lnet/minecraft/client/gui/screens/inventory/EffectRenderingInventoryScreen;)Ljava/util/Collection;",
             at = @At(value = "STORE", target = "Lnet/minecraft/client/gui/screens/inventory/AbstractContainerScreen;leftPos:I", ordinal = 1, remap = true), index = 4)

@@ -368,7 +368,16 @@ public class AttributeEvents {
                     attributeModifiers.put(ReachEntityAttributes.REACH, new AttributeModifier(AttributeHelper.BASE_ENTITY_REACH, () -> "zenith_attributes:fake_base_range", 0, Operation.ADDITION));
                 }
             }
-            if (slot == EquipmentSlot.CHEST && (stack.getItem() instanceof FabricElytraItem || stack.getItem() instanceof ElytraItem) && !attributeModifiers.containsKey(ALObjects.Attributes.ELYTRA_FLIGHT)) {
+            boolean customElytraItem;
+            try {
+                //:thinkies:
+                customElytraItem = ((stack.getItem() instanceof FabricElytraItem fabricElytraItem && fabricElytraItem.useCustomElytra(null, stack, false)));
+            }
+            catch (NullPointerException e) {
+                customElytraItem = false;
+            }
+
+            if (slot == EquipmentSlot.CHEST && ( customElytraItem || stack.getItem() instanceof ElytraItem) && !attributeModifiers.containsKey(ALObjects.Attributes.ELYTRA_FLIGHT)) {
                 attributeModifiers.put(ALObjects.Attributes.ELYTRA_FLIGHT, new AttributeModifier(AttributeHelper.ELYTRA_FLIGHT_UUID, () -> "zenith_attributes:elytra_item_flight", 1, Operation.ADDITION));
             }
         });

@@ -10,11 +10,13 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.inventory.AbstractContainerMenu;
 import org.spongepowered.asm.mixin.Mixin;
+import org.spongepowered.asm.mixin.Pseudo;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
 
 @Environment(EnvType.CLIENT)
 @Mixin(value = EffectRenderingInventoryScreen.class, priority = 1500)
+@Pseudo
 abstract public class EffectRenderingInventoryScreenMixinREI extends AbstractContainerScreen<AbstractContainerMenu> {
 
     public EffectRenderingInventoryScreenMixinREI(AbstractContainerMenu menu, Inventory playerInventory, Component title) {
