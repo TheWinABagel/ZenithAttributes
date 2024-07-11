@@ -1,5 +1,10 @@
 
 
+## 0.2.5
+* Refactor events to be more clear
+* Remove projectile damage attribute lib, reimplement the old system
+* Make REI mixins hopefully not crash when older REI versions are installed
+
 ## 0.2.4
 * Fix crit math
 
