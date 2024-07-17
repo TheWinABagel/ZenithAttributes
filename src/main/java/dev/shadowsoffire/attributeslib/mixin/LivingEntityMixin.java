@@ -1,5 +1,6 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
+import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import dev.shadowsoffire.attributeslib.api.ALCombatRules;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
@@ -80,13 +81,13 @@ public abstract class LivingEntityMixin extends Entity {
         return inst == null ? -1 : inst.getAmplifier();
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), method = "getDamageAfterArmorAbsorb", require = 1)
-    public float zenith_attributes$applyArmorPenplyArmorPen(float amount, float armor, float toughness, DamageSource src, float amt2) {
-        return ALCombatRules.getDamageAfterArmor(ths(), src, amount,(ths()).getArmorValue(), (float) (ths()).getAttributeValue(Attributes.ARMOR_TOUGHNESS));
+    @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), method = "getDamageAfterArmorAbsorb", require = 1)
+    public float zenith_attributes$applyArmorPen(float amount, DamageSource src) {
+        return ALCombatRules.getDamageAfterArmor(ths(), src, amount, ths().getArmorValue(), (float) (ths()).getAttributeValue(Attributes.ARMOR_TOUGHNESS));
     }
 
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterMagicAbsorb(FF)F"), method = "getDamageAfterMagicAbsorb", require = 1)
-    public float zenith_attributes$applyProtPen(float amount, float protPoints, DamageSource src, float amt2) {
+    @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterMagicAbsorb(FF)F"), method = "getDamageAfterMagicAbsorb", require = 1)
+    public float zenith_attributes$applyProtPen(float amount, DamageSource src) {
         return ALCombatRules.getDamageAfterProtection(ths(), src, amount, EnchantmentHelper.getDamageProtection((ths()).getArmorSlots(), src));
     }
 
