@@ -1,5 +1,8 @@
 
 
+## 0.2.6
+* Fix redirect crash with obscure api
+
 ## 0.2.5
 * Refactor events to be more clear
 * Remove projectile damage attribute lib, reimplement the old system
