@@ -1,5 +1,8 @@
 
 
+## 0.2.7
+* Remove massive amounts of log spam when things are damaged (oops)
+
 ## 0.2.6
 * Fix redirect crash with obscure api
 
