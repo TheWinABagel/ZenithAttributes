@@ -6,8 +6,10 @@ import dev.shadowsoffire.attributeslib.mixin.accessors.AbstractContainerScreenAc
 import me.shedaniel.math.Rectangle;
 import me.shedaniel.rei.api.client.plugins.REIClientPlugin;
 import me.shedaniel.rei.api.client.registry.screen.ExclusionZones;
+import net.minecraft.client.gui.screens.inventory.EffectRenderingInventoryScreen;
 import net.minecraft.client.gui.screens.inventory.InventoryScreen;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class REICompat implements REIClientPlugin {
@@ -15,12 +17,14 @@ public class REICompat implements REIClientPlugin {
     @Override
     public void registerExclusionZones(ExclusionZones zones) {
         zones.register(InventoryScreen.class, screen -> {
+            List<Rectangle> exclusions = new ArrayList<>();
             if (ALConfig.enableAttributesGui && AttributesGui.wasOpen) {
                 int leftPos = ((AbstractContainerScreenAccessor) screen).getLeftPos() - AttributesGui.WIDTH;
                 int topPos = ((AbstractContainerScreenAccessor) screen).getTopPos();
-                return List.of(new Rectangle(leftPos, topPos, AttributesGui.WIDTH, screen.height / 2));
+                exclusions.add(new Rectangle(leftPos, topPos, AttributesGui.WIDTH, ((AbstractContainerScreenAccessor) screen).getImageHeight()));
             }
-            return List.of();
+            return exclusions;
         });
+        zones.register(EffectRenderingInventoryScreen.class, new ReiPotionEffectExclusionZone());
     }
 }
