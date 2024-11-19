@@ -1,5 +1,8 @@
 
 
+## 0.2.9
+* Add check for invalid attribute modifiers that have a NaN value
+
 ## 0.2.8
 * Fix horrible REI mixin (what was I thinking...)
 * Generally improve other mixins to be (hopefully) more compatible (yet again, what was I thinking?)
