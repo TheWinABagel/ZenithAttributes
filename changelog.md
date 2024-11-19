@@ -1,5 +1,10 @@
 
 
+## 0.2.8
+* Fix horrible REI mixin (what was I thinking...)
+* Generally improve other mixins to be (hopefully) more compatible (yet again, what was I thinking?)
+* Update to latest features of AttributesLib (finally)
+
 ## 0.2.7
 * Remove massive amounts of log spam when things are damaged (oops)
 
