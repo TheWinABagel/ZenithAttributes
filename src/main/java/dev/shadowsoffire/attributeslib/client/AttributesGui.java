@@ -100,6 +100,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
                 .filter(Objects::nonNull)
                 .filter(ai -> !ALConfig.hiddenAttributes.contains(BuiltInRegistries.ATTRIBUTE.getKey(ai.getAttribute())))
                 .filter(ai -> !hideUnchanged || (ai.getBaseValue() != ai.getValue()))
+                .filter(ai -> !Double.isNaN(ai.getValue()))
                 .forEach(this.data::add);
         this.data.sort(this::compareAttrs);
         this.startIndex = (int) (scrollOffset * this.getOffScreenRows() + 0.5D);
@@ -171,7 +172,6 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
         gfx.drawString(font, Component.literal("Hide Unchanged"), this.leftPos + 20, this.topPos + 152, 0x404040, false);
     }
 
-    @SuppressWarnings({"NoTranslation"})
     protected void renderTooltip(GuiGraphics gfx, int mouseX, int mouseY) {
         AttributeInstance inst = this.getHoveredSlot(mouseX, mouseY);
         if (inst != null) {
@@ -225,7 +225,7 @@ public class AttributesGui implements Renderable, GuiEventListener, NarratableEn
                     min = Component.translatable("zenith_attributes.gui.min", min);
                     Component max = fAttr.toValueComponent(null, ra.getMaxValue(), AttributesLib.getTooltipFlag());
                     max = Component.translatable("zenith_attributes.gui.max", max);
-                    list.add(Component.translatable("%s \u2507 %s \u2507 %s", base, min, max).withStyle(ChatFormatting.GRAY));
+                    list.add(Component.translatable("%s ┇ %s ┇ %s", base, min, max).withStyle(ChatFormatting.GRAY));
                 } else {
                     list.add(base);
                 }
