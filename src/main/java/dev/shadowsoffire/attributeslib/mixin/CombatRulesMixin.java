@@ -12,7 +12,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
 @Mixin(value = CombatRules.class, priority = 1500)
 public class CombatRulesMixin {
-
+    //TODO This is bad! Do not do this!
     /**
      * @see ALCombatRules#getDamageAfterProtection(net.minecraft.world.entity.LivingEntity, net.minecraft.world.damagesource.DamageSource, float, float)
      */
@@ -27,6 +27,6 @@ public class CombatRulesMixin {
     @Inject(method ="getDamageAfterAbsorb", at = @At("HEAD"), cancellable = true)
     private static void zenith_attributes$getDamageAfterAbsorb(float damage, float totalArmor, float toughnessAttribute, CallbackInfoReturnable<Float> cir) {
         AttributesLib.LOGGER.trace("Invocation of CombatRules#getDamageAfterAbsorb is bypassing armor pen.");
-        cir.setReturnValue(damage * ALCombatRules.getArmorDamageReduction(damage, totalArmor));
+        cir.setReturnValue(damage * ALCombatRules.getArmorDamageReduction(damage, totalArmor, toughnessAttribute));
     }
 }

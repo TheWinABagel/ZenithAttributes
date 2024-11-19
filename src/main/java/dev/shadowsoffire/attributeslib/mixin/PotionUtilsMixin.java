@@ -1,5 +1,7 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import com.mojang.datafixers.util.Pair;
 import dev.shadowsoffire.attributeslib.AttributesLib;
 import dev.shadowsoffire.attributeslib.api.IFormattableAttribute;
@@ -13,7 +15,6 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.alchemy.PotionUtils;
 import org.spongepowered.asm.mixin.Mixin;
 import org.spongepowered.asm.mixin.injection.At;
-import org.spongepowered.asm.mixin.injection.Redirect;
 
 import java.util.List;
 
@@ -31,9 +32,9 @@ public class PotionUtilsMixin {
      * @see PotionUtils#addPotionTooltip(ItemStack, List, float)
      * @see PotionUtils#addPotionTooltip(List, List, float)
      */
-    @Redirect(method = "addPotionTooltip(Ljava/util/List;Ljava/util/List;F)V", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z", ordinal = 1), require = 1)
-    private static boolean zenith_attributes$potionTooltips(List<Pair<Attribute, AttributeModifier>> list, List<MobEffectInstance> effects, List<Component> tooltips, float durationFactor) {
-        if (!list.isEmpty()) {
+    @WrapOperation(method = "addPotionTooltip(Ljava/util/List;Ljava/util/List;F)V", at = @At(value = "INVOKE", target = "Ljava/util/List;isEmpty()Z", ordinal = 1), require = 1)
+    private static boolean zenith_attributes$potionTooltips(List<Pair<Attribute, AttributeModifier>> list, Operation<Boolean> original, List<MobEffectInstance> effects, List<Component> tooltips, float durationFactor) {
+        if (!original.call(list)) {
             tooltips.add(CommonComponents.EMPTY);
             tooltips.add(Component.translatable("potion.whenDrank").withStyle(ChatFormatting.DARK_PURPLE));
 

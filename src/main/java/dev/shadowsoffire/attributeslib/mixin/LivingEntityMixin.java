@@ -1,6 +1,8 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
 import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
+import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
+import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
 import dev.shadowsoffire.attributeslib.api.ALCombatRules;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
@@ -26,7 +28,6 @@ import org.spongepowered.asm.mixin.Unique;
 import org.spongepowered.asm.mixin.injection.At;
 import org.spongepowered.asm.mixin.injection.Inject;
 import org.spongepowered.asm.mixin.injection.ModifyVariable;
-import org.spongepowered.asm.mixin.injection.Redirect;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 import org.spongepowered.asm.mixin.injection.callback.CallbackInfoReturnable;
 
@@ -54,21 +55,21 @@ public abstract class LivingEntityMixin extends Entity {
      * @param source The damage source
      * @param damage The initial damage amount
      */
-    @Redirect(at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
-    public float zenith_attributes$sunderingApplyEffect(float value, float max, DamageSource source, float damage) {
+    @WrapOperation(at = @At(value = "INVOKE", target = "Ljava/lang/Math;max(FF)F"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
+    public float zenith_attributes$sunderingApplyEffect(float value, float max, Operation<Float> original, DamageSource source, float damage) {
         if (this.hasEffect(ALObjects.MobEffects.SUNDERING) && !source.is(DamageTypeTags.BYPASSES_RESISTANCE)) {
             int level = this.getEffect(ALObjects.MobEffects.SUNDERING).getAmplifier() + 1;
             value += damage * level * 0.2F;
         }
-        return Math.max(value, max);
+        return original.call(value, max);
     }
 
     /**
      * @author Shadows
      * @reason Used to enter an if-condition so the above mixin always triggers.
      */
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
-    public boolean zenith_attributes$sunderingHasEffect(LivingEntity ths, MobEffect effect) {
+    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/entity/LivingEntity;hasEffect(Lnet/minecraft/world/effect/MobEffect;)Z"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
+    public boolean zenith_attributes$sunderingHasEffect(LivingEntity instance, MobEffect effect, Operation<Boolean> original) {
         return true;
     }
 
@@ -76,9 +77,9 @@ public abstract class LivingEntityMixin extends Entity {
      * @author Shadows
      * @reason Used to prevent an NPE since we're faking true on hasEffect
      */
-    @Redirect(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffectInstance;getAmplifier()I"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
-    public int zenith_attributes$sunderingGetAmplifier(@Nullable MobEffectInstance inst) {
-        return inst == null ? -1 : inst.getAmplifier();
+    @WrapOperation(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/effect/MobEffectInstance;getAmplifier()I"), method = "getDamageAfterMagicAbsorb(Lnet/minecraft/world/damagesource/DamageSource;F)F")
+    public int zenith_attributes$sunderingGetAmplifier(@Nullable MobEffectInstance inst, Operation<Integer> original) {
+        return inst == null ? -1 : original.call(inst);
     }
 
     @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), method = "getDamageAfterArmorAbsorb", require = 1)
@@ -130,7 +131,6 @@ public abstract class LivingEntityMixin extends Entity {
         .add(ALObjects.Attributes.ELYTRA_FLIGHT)
         .add(ALObjects.Attributes.CREATIVE_FLIGHT)
         .add(AdditionalEntityAttributes.CRITICAL_BONUS_DAMAGE); //Done to fix crash, as it used to be applied to all entities and is now applied to only players
-
     }
 
     @Unique

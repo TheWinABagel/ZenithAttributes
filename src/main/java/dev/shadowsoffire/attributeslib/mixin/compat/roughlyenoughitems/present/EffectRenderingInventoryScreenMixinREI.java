@@ -41,7 +41,7 @@ abstract public class EffectRenderingInventoryScreenMixinREI extends AbstractCon
         }
     }
 
-    @ModifyVariable(method = {"renderEffects"}, at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Ordering;sortedCopy(Ljava/lang/Iterable;)Ljava/util/List;", ordinal = 0), ordinal = 0)
+    @ModifyVariable(method = "renderEffects", at = @At(value = "INVOKE", target = "Lcom/google/common/collect/Ordering;sortedCopy(Ljava/lang/Iterable;)Ljava/util/List;", ordinal = 0), ordinal = 0)
     public boolean modifyBl(boolean bl) {
         if (!this.leftSideEffects()) {
             return bl;

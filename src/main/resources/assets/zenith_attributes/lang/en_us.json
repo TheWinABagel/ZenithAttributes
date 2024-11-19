@@ -28,6 +28,9 @@
 	"zenith_attributes.gui.press_shift": "Hold Shift for more info.",
 	"zenith_attributes.gui.current": "Current: %s",
 	"zenith_attributes.gui.show_attributes": "Show Attributes",
+	"zenith_attributes.gui.formula.base": "Base",
+	"zenith_attributes.gui.formula.value": "Value",
+	"zenith_attributes.gui.no_modifiers": "No Modifiers",
 
 	"attribute.name.generic.armor.desc": "Increases physical damage reduction.",
 	"attribute.name.generic.armor_toughness.desc": "Reduces the effectiveness of enemy armor reduction.",
@@ -169,15 +172,7 @@
 
     "death.attack.zenith_attributes:cold_damage": "%1$s was frozen to death",
     "death.attack.zenith_attributes:cold_damage.item": "%1$s was frozen to death by %2$s using %3$s",
-    "death.attack.zenith_attributes:cold_damage.player": "%1$s was frozen to death whilst fighting %2$s",
+    "death.attack.zenith_attributes:cold_damage.player": "%1$s was frozen to death whilst fighting %2$s"
 
-	"comment_id": "Temporary localization hell",
-	"porting_lib.swim_speed": "Swim Speed",
-	"porting_lib.name_tag_distance": "Nametag Render Distance",
-	"porting_lib.entity_gravity": "Gravity",
-	"porting_lib.step_height": "Step Height",
-	"porting_lib.swimSpeed": "Swim Speed",
-	"porting_lib.nameTagDistance": "Nametag Render Distance",
-	"porting_lib.entityGravity": "Gravity",
-	"porting_lib.stepHeight": "Step Height"
+
 }

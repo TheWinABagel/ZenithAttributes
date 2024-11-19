@@ -75,12 +75,15 @@ public class ALConfig {
                         'a' - The a-value computed by the a-value formula.
                         'damage' - The damage of the incoming attack.
                         'armor' - The armor value of the user after reductions.
+                        'toughness' - The armor toughness value of the user.
                     Output:
                         The percentage of damage taken after armor has been applied, from 0 (no damage taken) to 1 (full damage taken).
                     Reference:
                         See https://github.com/ezylang/EvalEx#usage-examples for how to write expressions.
+                    Note:
+                        The vanilla formula is: 1 - min(max(armor - damage / (2 + toughness / 4), armor / 5), 20) / 25
                     """,
-                "a", "damage", "armor");
+                "a", "damage", "armor", "toughness");
 
         if (cfg.hasChanged()) cfg.save();
     }

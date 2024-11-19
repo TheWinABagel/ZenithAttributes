@@ -90,7 +90,7 @@ public class ALCombatRules {
         }
 
         if (armor <= 0) return amount;
-        return amount * getArmorDamageReduction(amount, armor);
+        return amount * getArmorDamageReduction(amount, armor, toughness);
     }
 
     /**
@@ -122,10 +122,15 @@ public class ALCombatRules {
      * @see #getAValue(float)
      * @see #getDamageAfterArmor(LivingEntity, DamageSource, float, float, float)
      */
-    public static float getArmorDamageReduction(float damage, float armor) {
+    public static float getArmorDamageReduction(float damage, float armor, float toughness) {
         float a = getAValue(damage);
         if (ALConfig.getArmorExpr().isPresent()) {
-            return ALConfig.getArmorExpr().get().setVariable("a", new BigDecimal(a)).setVariable("damage", new BigDecimal(damage)).setVariable("armor", new BigDecimal(armor)).eval().floatValue();
+            return ALConfig.getArmorExpr().get()
+                    .setVariable("a", new BigDecimal(a))
+                    .setVariable("damage", new BigDecimal(damage))
+                    .setVariable("armor", new BigDecimal(armor))
+                    .setVariable("toughness", new BigDecimal(toughness))
+                    .eval().floatValue();
         }
         return a / (a + armor);
     }
