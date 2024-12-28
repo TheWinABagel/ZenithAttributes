@@ -1,5 +1,8 @@
 
 
+## 0.2.10
+* Yeet combat rule changes, should be temporary (but nothing is more permanent as they say...)
+
 ## 0.2.9
 * Add check for invalid attribute modifiers that have a NaN value
 
