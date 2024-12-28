@@ -1,10 +1,8 @@
 package dev.shadowsoffire.attributeslib.mixin;
 
-import com.llamalad7.mixinextras.injector.ModifyExpressionValue;
 import com.llamalad7.mixinextras.injector.wrapoperation.Operation;
 import com.llamalad7.mixinextras.injector.wrapoperation.WrapOperation;
 import de.dafuqs.additionalentityattributes.AdditionalEntityAttributes;
-import dev.shadowsoffire.attributeslib.api.ALCombatRules;
 import dev.shadowsoffire.attributeslib.api.ALObjects;
 import dev.shadowsoffire.attributeslib.api.events.LivingHealEvent;
 import dev.shadowsoffire.attributeslib.api.events.LivingHurtEvent;
@@ -17,9 +15,7 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.EntityType;
 import net.minecraft.world.entity.LivingEntity;
 import net.minecraft.world.entity.ai.attributes.AttributeSupplier;
-import net.minecraft.world.entity.ai.attributes.Attributes;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.enchantment.EnchantmentHelper;
 import net.minecraft.world.level.Level;
 import org.jetbrains.annotations.Nullable;
 import org.spongepowered.asm.mixin.Mixin;
@@ -81,16 +77,16 @@ public abstract class LivingEntityMixin extends Entity {
     public int zenith_attributes$sunderingGetAmplifier(@Nullable MobEffectInstance inst, Operation<Integer> original) {
         return inst == null ? -1 : original.call(inst);
     }
-
-    @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), method = "getDamageAfterArmorAbsorb", require = 1)
-    public float zenith_attributes$applyArmorPen(float amount, DamageSource src) {
-        return ALCombatRules.getDamageAfterArmor(ths(), src, amount, ths().getArmorValue(), (float) (ths()).getAttributeValue(Attributes.ARMOR_TOUGHNESS));
-    }
-
-    @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterMagicAbsorb(FF)F"), method = "getDamageAfterMagicAbsorb", require = 1)
-    public float zenith_attributes$applyProtPen(float amount, DamageSource src) {
-        return ALCombatRules.getDamageAfterProtection(ths(), src, amount, EnchantmentHelper.getDamageProtection((ths()).getArmorSlots(), src));
-    }
+    //Todo figure out armor modification...
+//    @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterAbsorb(FFF)F"), method = "getDamageAfterArmorAbsorb", require = 1)
+//    public float zenith_attributes$applyArmorPen(float amount, DamageSource src) {
+//        return ALCombatRules.getDamageAfterArmor(ths(), src, amount, ths().getArmorValue(), (float) (ths()).getAttributeValue(Attributes.ARMOR_TOUGHNESS));
+//    }
+//
+//    @ModifyExpressionValue(at = @At(value = "INVOKE", target = "Lnet/minecraft/world/damagesource/CombatRules;getDamageAfterMagicAbsorb(FF)F"), method = "getDamageAfterMagicAbsorb", require = 1)
+//    public float zenith_attributes$applyProtPen(float amount, DamageSource src) {
+//        return ALCombatRules.getDamageAfterProtection(ths(), src, amount, EnchantmentHelper.getDamageProtection((ths()).getArmorSlots(), src));
+//    }
 
     @ModifyVariable(method = "heal", at = @At(value = "HEAD"), argsOnly = true)
     private float zenith_attributes$onHealEvent(float value){
